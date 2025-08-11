@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="main-wrapper">
+    <div class="container-fuild">
+        <div class="w-100 overflow-hidden position-relative flex-wrap d-block">
+            <div class="row justify-content-center align-items-center overflow-auto flex-wrap ">
+                <div class="col-md-5 mx-auto">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-flex flex-column justify-content-between p-4">
+                            <div class=" mx-auto auth-img text-center w-50">
+                                <img src=" {% static 'img/nlogo.png' %} " class="img-fluid" alt="Logo">
+                            </div>
+                            <div class="card rounded p-3 mb-0">
+                                <div class="card-body">
+                                    <div class="text-center mb-4">
+                                        <h3 class="mb-2 fw-bold">Sign In</h3>
+                                        <p class="mb-0">Please enter your details to sign in to the system</p>
+                                        {% if messages %}
+                                          {% for message in messages %}
+                                            <p>{{ message }}</p>
+                                          {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Username</label>
+                                        <div class="input-group">
+                                            <input type="text" value="" class="form-control border-end-0" name="username" required>
+                                            <span class="input-group-text text-gray border-start-0"><i class="ti ti-user"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <div class="pass-group">
+                                            <input type="password" class="pass-input form-control" name="password" required>
+                                            <span class="ti toggle-password text-gray ti-lock"></span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="form-check form-check-md mb-0">
+                                                <input class="form-check-input" id="remember_me" type="checkbox">
+                                                <label for="remember_me" class="form-check-label text-gray-9 mt-0">Remember Me</label>
+                                            </div>
+                                        </div>
+                                        {% comment %} <div class="text-end">
+                                            <a href="forgot-password.html" class="fw-medium text-gray-5">Forgot Password?</a>
+                                        </div> {% endcomment %}
+                                    </div>
+                                    <div class="mb-4">
+                                        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                                    </div>
+                                    {% comment %} <div class="login-or">
+                                        <span class="span-or text-gray fs-13 fw-medium">Or Sign in With</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                            <div class="text-center me-2 flex-fill">
+                                                <a href="javascript:void(0);" class="br-10 p-2 btn btn-outline-light border d-flex align-items-center justify-content-center">
+                                                    <img class="img-fluid m-1" src="assets/img/icons/facebook-logo.svg" alt="Facebook">
+                                                </a>
+                                            </div>
+                                            <div class="text-center me-2 flex-fill">
+                                                <a href="javascript:void(0);" class="br-10 p-2 btn btn-outline-light border d-flex align-items-center justify-content-center">
+                                                    <img class="img-fluid m-1" src="assets/img/icons/google-logo.svg" alt="Facebook">
+                                                </a>
+                                            </div>
+                                            <div class="text-center flex-fill">
+                                                <a href="javascript:void(0);" class="br-10 p-2 btn btn-outline-light border d-flex align-items-center justify-content-center">
+                                                    <img class="img-fluid m-1" src="assets/img/icons/apple-logo.svg" alt="Apple">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-4">
+                                        <p class="fw-normal mb-0">Don’t have an account?
+                                            <a href="register.html" class="text-gray-9 text-decoration-underline "> Create Account</a>
+                                        </p>
+                                    </div> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+  </div>
+  <!-- /Main Wrapper -->
+
+  <!-- jQuery -->
+  <script src=" {% static 'js/jquery-3.7.1.min.js' %}" type="4fcad59fe789173f43c98316-text/javascript"></script>
+
+  <!-- Bootstrap Core JS -->
+  <script src=" {% static 'js/bootstrap.bundle.min.js' %}" type="4fcad59fe789173f43c98316-text/javascript"></script>
+
+  <!-- Custom JS -->
+  <script src=" {% static 'js/script.js' %}" type="4fcad59fe789173f43c98316-text/javascript"></script>
+
+  <script src="../../cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js" data-cf-settings="4fcad59fe789173f43c98316-|49" defer=""></script>
+
+
+{% endblock %} 
+

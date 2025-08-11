@@ -1,0 +1,441 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="main-wrapper">
+        <!-- Page Wrapper -->
+        <div class="page-wrapper">
+            <div class="content content-two">
+
+                <!-- Breadcrumb -->
+                <div class="mb-4 d-flex align-items-center flex-wrap gap-2 justify-content-between">
+                    <div>
+                        <h4 class="mb-1 fw-bold">Employees</h4>
+                        <nav>
+                            <ol class="breadcrumb breadcrumb-dot mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="{%url 'dashboard'%}">Home</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Employees</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class=" d-flex align-items-center">
+                        <a href="javascript:void(0);" class="btn btn-md btn-primary me-2" data-bs-toggle="modal" data-bs-target="#add_employees"><i class="ti ti-plus me-1"></i>Add New Employee</a>
+                        {% comment %} <a href="javascript:void(0);" class="btn btn-md btn-dark" data-bs-toggle="modal" data-bs-target="#edit_employees"><i class="ti ti-send me-1"></i>Invite</a> {% endcomment %}
+                    </div>
+                </div>
+                <!-- /Breadcrumb -->
+
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card flex-fill shadow-none">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2">
+                                            <img src="{% static 'img/icons/employees-1.svg' %}" alt="img">
+                                        </div>
+                                        <div>
+                                            <span class="mb-1">Total Employees</span>
+                                            <h2 class="d-flex align-items-center">2520 <span class="text-success fs-12 ms-2"><i class="ti ti-trending-up me-1"></i>22.5%</span></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card flex-fill shadow-none">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2">
+                                            <img src="{% static 'img/icons/employees-2.svg' %}" alt="img">
+                                        </div>
+                                        <div>
+                                            <span class="mb-1">Active Employees</span>
+                                            <h2 class="d-flex align-items-center">2000 <span class="text-success fs-12 ms-2"><i class="ti ti-trending-up me-1"></i>15.2%</span></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card flex-fill shadow-none">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2">
+                                            <img src="{% static 'img/icons/employees-3.svg' %}" alt="img">
+                                        </div>
+                                        <div>
+                                            <span class="mb-1">Inactive Employees</span>
+                                            <h2 class="d-flex align-items-center">350 <span class="text-success fs-12 ms-2"><i class="ti ti-trending-up me-1"></i>16.3%</span></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="nav nav-tabs tab-style-project d-inline-flex d-block" role="tablist">
+                    <li class="nav-item">
+                        <a href="employees.html" class="nav-link d-flex align-items-center active"><i class="ti ti-user-check fs-13 me-1"></i> Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="employees-deactivated.html" class="nav-link d-flex align-items-center"><i class="ti ti-user-cancel fs-13 me-1"></i>Deactivated</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="employees-archieved.html" class="nav-link d-flex align-items-center"><i class="ti ti-user-up fs-13 me-1"></i>Archieved</a>
+                    </li>
+                </ul>
+
+                <!-- Search -->
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 table-header mb-3">
+                    <div class="filters mb-3">
+                        <input type="text" id="searchInput" placeholder="Search workers..." class="form-control" style="width:200px; display:inline-block;">
+                    </div>
+                </div>
+                <!-- /Search -->
+
+                <!-- Table List -->
+                <div class="table-responsive">
+                    <table class="table" id="workersTable">
+                        <thead class="thead-light text-uppercase">
+                            <tr>
+                                <th class="no-sort">
+                                    Photo
+                                </th>
+                                <th class="no-sort">Name</th>
+                                <th class="no-sort">Contact</th>
+                                <th class="no-sort">Email</th>
+                                <th class="no-sort">Role </th>
+                                <th class="no-sort">Date Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody id="">
+                            {% for worker in workers %}
+                            <tr>
+                                <td>
+                                    {% if worker.photo %}
+                                        <img src="{{ worker.photo.url }}" alt="Photo" width="50">
+                                    {% else %}
+                                        No Photo
+                                    {% endif %}
+                                </td>
+                                <td>{{ worker.name }}</td>
+                                <td>{{ worker.phone }}</td>
+                                <td>{{ worker.email }}</td>
+                                <td>{{ worker.role }}</td>
+                                <td>{{ worker.registered_on|date:"Y-m-d" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No workers yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /Table List -->
+
+            </div>
+        </div>
+
+        <!-- Add Employee  -->
+        <div class="modal fade" id="add_employees">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add Employee</h5>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="ti ti-x"></i></button>
+					</div>
+                    <form method="POST" enctype="multipart/form-data" id="workerForm">
+                        {% csrf_token %}
+                         <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center flex-wrap row-gap-3 w-100 rounded mb-4">
+                                        <div class="avatar avatar-xxl lh-normal fs-14 rounded-circle border border-dashed me-2 flex-shrink-0 text-dark frames flex-column">
+                                            <i class="ti ti-upload text-gray-2 fs-16"></i>
+                                        </div>
+                                        <div class="profile-upload">
+                                            <div class="mb-2">
+                                                <div class="drag-upload-btn btn btn-sm btn-dark me-2 mb-2">
+                                                    Upload
+                                                    <input type="file" class="form-control image-sign" name="photo">
+                                                </div>
+                                                {% comment %} <p>Recommended size is 300px x 300px</p> {% endcomment %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Employee Name<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" class="form-control" name="name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Gender<span class="text-danger ms-1">*</span></label>
+                                        <select class="select" name="gender" required>
+                                            <option>Select</option>
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Contact<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" class="form-control" name="phone" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-0">
+                                        <label class="form-label">Email<span class="text-danger ms-1">*</span></label>
+                                        <input type="email" class="form-control" name="email" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-0">
+                                        <label class="form-label">Position<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" class="form-control" name="role" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-0">
+                                        <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" class="form-control" name="address" required>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white btn-md me-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-md">Add Employee</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Employee  -->
+        <div class="modal fade" id="edit_employees">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Employee</h5>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="ti ti-x"></i></button>
+					</div>
+                    <form Method="POST">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center flex-wrap row-gap-3 w-100 rounded mb-4">
+                                        <div class="avatar avatar-xxl lh-normal fs-14 rounded-circle border border-dashed me-2 flex-shrink-0 text-dark frames flex-column">
+                                            <img src="{{ worker.photo.url }}" class="rounded-circle" alt="user-img">
+                                        </div>
+                                        <div class="profile-upload">
+                                            <div class="mb-2">
+                                                <div class="drag-upload-btn btn btn-sm btn-dark me-2 mb-2">
+                                                    Upload
+                                                    <input type="file" class="form-control image-sign" >
+                                                </div>
+                                                {% comment %} <p>Recommended size is 300px x 300px</p> {% endcomment %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Employee Name<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" id="edit-name" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Gender<span class="text-danger ms-1">*</span></label>
+                                        <select id="edit-gender" class="select" >
+                                            <option>Select</option>
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Contact<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" id="edit-contact" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-0">
+                                        <label class="form-label">Email<span class="text-danger ms-1">*</span></label>
+                                        <input type="email" id="edit-email" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-0">
+                                        <label class="form-label">Position<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" class="form-control" id="edit-position">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-0">
+                                        <label class="form-label">Address<span class="text-danger ms-1">*</span></label>
+                                        <input type="text" class="form-control" id="edit-address">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white btn-md me-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-md">Update Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Theme Script js -->
+    <script src="{% static 'js/theme-script.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="{% static 'js/jquery.slimscroll.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Datatable JS -->
+    <script src="{% static 'js/jquery.dataTables.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+    <script src="{% static 'js/dataTables.bootstrap5.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Select2 JS -->
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Daterangepikcer JS -->
+    <script src="{% static 'js/moment.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+    <script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/script.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="85548e56bad66eee12a166ed-|49" defer=""></script>
+
+    <script>
+        const form = document.querySelector('#workerForm');
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+      
+          const formData = new FormData(form);
+      
+          const response = await fetch("{% url 'workers:worker_list' %}", {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: formData
+          });
+      
+          const data = await response.json();
+          if (data.success) {
+                alert(data.message);  // ✅ Alert box with success message
+                form.reset();         // Clear form
+                document.getElementById('workerModal').style.display = 'none'; // Close modal
+            } else {
+                alert('Error: ' + (data.message || 'Something went wrong.'));
+            }
+          
+        //   if (data.status === 'success') {
+        //     document.querySelector('#workers-table-body').insertAdjacentHTML('beforeend', data.row);
+        //     form.reset();
+        //     const modal = bootstrap.Modal.getInstance(document.getElementById('registerWorkerModal'));
+        //     modal.hide();
+        //   } else {
+        //     alert(data.message);
+        //   }
+        });
+
+
+        document.getEventListener('DOMContentLoaded', function(){
+
+            const editModal = document.getElementById('edit_employees');
+    
+            editModal.addEventListener('show.bs.modal', async function (event) {
+                const button = event.relatedTarget; // The button that triggered the modal
+                const workerId = button.getAttribute('data-id');
+    
+            // Fetch worker data from Django
+                const res = await fetch(`/get-worker/${workerId}/`);
+                const data = await res.json();
+    
+            // Fill modal form fields
+                document.getElementById('edit-worker-id').value = workerId;
+                document.getElementById('edit-name').value = data.name;
+                document.getElementById('edit-contact').value = data.contact;
+                document.getElementById('edit-email').value = data.email;
+                document.getElementById('edit-gender').value = data.gender;
+                document.getElementById('edit-position').value = data.position;
+                document.getElementById('edit-address').value = data.address;
+
+                console.log("button clicked:", button);
+                console.log("button clicked:", WorkerId);
+                console.log("button clicked:", data);
+    
+                // Optional: set photo preview
+                
+            });
+        });
+         
+      </script>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+                const searchInput = document.getElementById('searchInput');
+                const tableBody = document.querySelector('#workersTable tbody');
+
+                searchInput.addEventListener('keyup', function() {
+                    let query = searchInput.value.trim();
+
+                    fetch("{% url 'workers:worker_search' %}?q=" + encodeURIComponent(query))
+                        .then(response => response.json())
+                        .then(data => {
+                            tableBody.innerHTML = '';
+
+                            data.results.forEach(worker => {
+                                let row = `
+                                     <tr>
+                                        <td>${worker.photo_url ? `<img src="${worker.photo_url}" width="50">` : 'No Photo'}</td>
+                                        <td>${worker.name}</td>
+                                        <td>${worker.phone || ''}</td>
+                                        <td>${worker.email || ''}</td>
+                                        <td>${worker.role || ''}</td>
+                                        <td>${worker.registered_on || ''}</td>
+                                    </tr>
+                                `;
+                                tableBody.innerHTML += row;
+                            });
+                        })
+                        .catch(err => console.error('Search error:', err));
+                });
+            });
+        </script>
+
+      
+  
+{% endblock %} 
+
+
