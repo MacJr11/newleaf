@@ -6086,6 +6086,39 @@ canvas#activities {
   inset-inline-start: 75%;
 }
 
+
+/* my codes */
+
+.pagination-container {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.pagination {
+    display: inline-flex;
+    list-style: none;
+    padding-left: 0;
+}
+
+.pagination .page-item {
+    margin: 0 2px;
+}
+
+.pagination .page-link {
+    padding: 3px 8px; /* Smaller padding */
+    font-size: 0.85rem; /* Smaller text */
+    border-radius: 4px;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.pagination .active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+
 .custom-progress-3 {
   overflow: visible;
   border-radius: 0.625rem;

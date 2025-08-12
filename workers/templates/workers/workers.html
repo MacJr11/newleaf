@@ -38,7 +38,7 @@
                                         </div>
                                         <div>
                                             <span class="mb-1">Total Employees</span>
-                                            <h2 class="d-flex align-items-center">2520 <span class="text-success fs-12 ms-2"><i class="ti ti-trending-up me-1"></i>22.5%</span></h2>
+                                            <h2 class="d-flex align-items-center">{{total_workers}} <span class="text-success fs-12 ms-2"><i class="ti ti-users me-1"></i></span></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -55,7 +55,7 @@
                                         </div>
                                         <div>
                                             <span class="mb-1">Active Employees</span>
-                                            <h2 class="d-flex align-items-center">2000 <span class="text-success fs-12 ms-2"><i class="ti ti-trending-up me-1"></i>15.2%</span></h2>
+                                            <h2 class="d-flex align-items-center">{{active_workers}} <span class="text-success fs-12 ms-2"><i class="ti ti-trending-up me-1"></i></span></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +72,7 @@
                                         </div>
                                         <div>
                                             <span class="mb-1">Inactive Employees</span>
-                                            <h2 class="d-flex align-items-center">350 <span class="text-success fs-12 ms-2"><i class="ti ti-trending-up me-1"></i>16.3%</span></h2>
+                                            <h2 class="d-flex align-items-center">{{inactive_workers}} <span class="text-success fs-12 ms-2"><i class="ti ti-trending-up me-1"></i></span></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -82,15 +82,7 @@
                 </div>
 
                 <ul class="nav nav-tabs tab-style-project d-inline-flex d-block" role="tablist">
-                    <li class="nav-item">
-                        <a href="employees.html" class="nav-link d-flex align-items-center active"><i class="ti ti-user-check fs-13 me-1"></i> Active</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="employees-deactivated.html" class="nav-link d-flex align-items-center"><i class="ti ti-user-cancel fs-13 me-1"></i>Deactivated</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="employees-archieved.html" class="nav-link d-flex align-items-center"><i class="ti ti-user-up fs-13 me-1"></i>Archieved</a>
-                    </li>
+
                 </ul>
 
                 <!-- Search -->
@@ -114,6 +106,7 @@
                                 <th class="no-sort">Email</th>
                                 <th class="no-sort">Role </th>
                                 <th class="no-sort">Date Joined</th>
+                                <th class="no-sort">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="">
@@ -131,6 +124,10 @@
                                 <td>{{ worker.email }}</td>
                                 <td>{{ worker.role }}</td>
                                 <td>{{ worker.registered_on|date:"Y-m-d" }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-btn" data-id="{{ worker.id }}">Edit</button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-id="{{ worker.id }}">Delete</button>
+                                </td>
                             </tr>
                             {% empty %}
                             <tr>
@@ -139,6 +136,47 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <div class="pagination">
+                        <nav aria-label="Worker pagination" class="pagination-container">
+                            <ul class="pagination">
+                                {% if workers.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link btn btn-outline-primary" href="?page={{ workers.previous_page_number }}">
+                                            &laquo; Previous
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link btn btn-outline-secondary disabled">&laquo; Previous</span>
+                                    </li>
+                                {% endif %}
+
+                                {% for num in workers.paginator.page_range %}
+                                    {% if workers.number == num %}
+                                        <li class="page-item active">
+                                            <span class="page-link btn btn-primary">{{ num }}</span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link btn btn-outline-primary" href="?page={{ num }}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if workers.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link btn btn-outline-primary" href="?page={{ workers.next_page_number }}">
+                                            Next &raquo;
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link btn btn-outline-secondary disabled">Next &raquo;</span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
                 <!-- /Table List -->
 
@@ -155,6 +193,7 @@
 					</div>
                     <form method="POST" enctype="multipart/form-data" id="workerForm">
                         {% csrf_token %}
+                        <input type="hidden" id="worker_id" name="worker_id">
                          <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
@@ -334,74 +373,60 @@
 
     <script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="85548e56bad66eee12a166ed-|49" defer=""></script>
 
-    <script>
-        const form = document.querySelector('#workerForm');
-        form.addEventListener('submit', async function(e) {
-          e.preventDefault();
-      
-          const formData = new FormData(form);
-      
-          const response = await fetch("{% url 'workers:worker_list' %}", {
-            method: 'POST',
-            headers: {
-              'X-Requested-With': 'XMLHttpRequest',
-              'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: formData
-          });
-      
-          const data = await response.json();
-          if (data.success) {
-                alert(data.message);  // ✅ Alert box with success message
-                form.reset();         // Clear form
-                document.getElementById('workerModal').style.display = 'none'; // Close modal
-            } else {
-                alert('Error: ' + (data.message || 'Something went wrong.'));
+    
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector('#workerForm');
+
+            if (!form.dataset.listenerAdded) {
+                form.dataset.listenerAdded = "true"; // ✅ prevent duplicate
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    // ... fetch code
+                    const formData = new FormData(form);
+
+                    const response = await fetch("{% url 'workers:worker_list' %}", {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        alert(data.message);
+                        form.reset();
+                        document.getElementById('worker_id').value = ""; // reset edit mode
+                        document.getElementById('add_employees').style.display = 'none';
+                        location.reload(); // reload to refresh table
+                    } else {
+                        alert(data.message);
+                    }
+                });
             }
-          
-        //   if (data.status === 'success') {
-        //     document.querySelector('#workers-table-body').insertAdjacentHTML('beforeend', data.row);
-        //     form.reset();
-        //     const modal = bootstrap.Modal.getInstance(document.getElementById('registerWorkerModal'));
-        //     modal.hide();
-        //   } else {
-        //     alert(data.message);
-        //   }
-        });
 
+            // Handle Edit button click
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', async function () {
+                    $('#add_employees').modal('show');
+                    const workerId = this.dataset.id;
 
-        document.getEventListener('DOMContentLoaded', function(){
+                    const res = await fetch("{% url 'workers:get_worker' 0 %}".replace('0', workerId));
+                    const worker = await res.json();
 
-            const editModal = document.getElementById('edit_employees');
-    
-            editModal.addEventListener('show.bs.modal', async function (event) {
-                const button = event.relatedTarget; // The button that triggered the modal
-                const workerId = button.getAttribute('data-id');
-    
-            // Fetch worker data from Django
-                const res = await fetch(`/get-worker/${workerId}/`);
-                const data = await res.json();
-    
-            // Fill modal form fields
-                document.getElementById('edit-worker-id').value = workerId;
-                document.getElementById('edit-name').value = data.name;
-                document.getElementById('edit-contact').value = data.contact;
-                document.getElementById('edit-email').value = data.email;
-                document.getElementById('edit-gender').value = data.gender;
-                document.getElementById('edit-position').value = data.position;
-                document.getElementById('edit-address').value = data.address;
-
-                console.log("button clicked:", button);
-                console.log("button clicked:", WorkerId);
-                console.log("button clicked:", data);
-    
-                // Optional: set photo preview
-                
+                    // Fill form fields
+                    document.getElementById('worker_id').value = worker.id;
+                    document.querySelector('input[name="name"]').value = worker.name;
+                    document.querySelector('input[name="phone"]').value = worker.phone;
+                    document.querySelector('input[name="email"]').value = worker.email;
+                    document.querySelector('select[name="gender"]').value = worker.gender;
+                    document.querySelector('input[name="role"]').value = worker.role;
+                    document.querySelector('input[name="address"]').value = worker.address;                    
+                });
             });
         });
-         
       </script>
-
+      
       <script>
         document.addEventListener('DOMContentLoaded', function () {
                 const searchInput = document.getElementById('searchInput');
@@ -432,7 +457,49 @@
                         .catch(err => console.error('Search error:', err));
                 });
             });
-        </script>
+
+            // CSRF helper
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let cookie of cookies) {
+                        cookie = cookie.trim();
+                        if (cookie.startsWith(name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Event delegation for delete
+            document.addEventListener('click', async function (e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    e.preventDefault();
+
+                    const workerId = e.target.dataset.id;
+                    if (!confirm("Are you sure you want to delete this worker?")) return;
+
+                    const res = await fetch(`/workers/delete/${workerId}/`, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": getCookie("csrftoken"),
+                        }
+                    });
+
+                    const data = await res.json();
+                    if (data.success) {
+                        alert(data.message);
+                        e.target.closest('tr').remove();
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+      </script>
 
       
   

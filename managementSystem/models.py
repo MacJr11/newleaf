@@ -1,6 +1,7 @@
 from django.db import models
 from workers.models import Worker
 
+
 class Client(models.Model):
     name = models.CharField(max_length=200)
     address = models.TextField()
@@ -46,10 +47,13 @@ class TaskAssignment(models.Model):
     def calculate_payments(self):
         count = self.order_item.quantity
         if self.is_group_task:
+            if self.workers.count() == 0:
+                return 0
             total_pay = self.price_per_task * count
             return round(total_pay / self.workers.count(), 2)
         else:
             return float(self.price_per_task)
+
 
     def __str__(self):
         return f"Task for: {self.order_item}"

@@ -37,6 +37,8 @@
     <link rel="stylesheet" href=" {% static 'plugins/fontawesome/css/fontawesome.min.css'%} ">
     <link rel="stylesheet" href=" {% static 'plugins/fontawesome/css/all.min.css'%} ">
 
+      <link rel="stylesheet" href="{% static 'plugins/intltelinput/css/intlTelInput.css' %}">
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %} ">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/nlogof.png' %}">
@@ -50,10 +52,10 @@
 
                     <div class="header-left">
                         <a href="{% url 'dashboard' %}" class="logo">
-                            <img src=" {% static "img/nlogo.png" %} " alt="Logo">
+                            <img src=" {% static 'img/nlogo.png' %} " alt="Logo">
                         </a>
                         <a href="{% url 'dashboard' %}" class="dark-logo">
-                            <img src=" {% static "img/nlogo.png" %} " alt="Logo">
+                            <img src=" {% static 'img/nlogo.png' %} " alt="Logo">
                         </a>
                     </div>
 
@@ -77,7 +79,7 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-start p-2">
                                         <li><a class="dropdown-item d-flex align-items-center" href=" {% url 'workers:worker_list' %}"><i class="ti ti-user me-2"></i>Employee</a></li>
-                                        <li><a class="dropdown-item d-flex align-items-center" href="teams.html"><i class="ti ti-users-plus me-2"></i>Team</a></li>
+                                        <li><a class="dropdown-item d-flex align-items-center" href="{% url 'managementSystem:register_client' %}"><i class="ti ti-users-plus me-2"></i>Client</a></li>
                                         <li><a class="dropdown-item d-flex align-items-center" href="projects.html"><i class="ti ti-progress-check me-2"></i>Projects</a></li>
                                         <li><a class="dropdown-item d-flex align-items-center" href="users.html"><i class="ti ti-users me-2"></i>Users</a></li>
                                         <li><a class="dropdown-item d-flex align-items-center" href="manual-time.html"><i class="ti ti-clock me-2"></i>Manual Time</a></li>
@@ -301,13 +303,13 @@
                                 <div class="dropdown profile-dropdown">
                                     <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                         <span class="avatar avatar-md">
-                                            <img src="{% static "img/profiles/avatar-01.jpg" %}" alt="Img" class="img-fluid rounded-circle">
+                                            <img src="{% static 'img/profiles/avatar-01.jpg' %}" alt="Img" class="img-fluid rounded-circle">
                                         </span>
                                     </a>
                                     <div class="dropdown-menu p-2">
                                         <div class="profileset d-flex align-items-center bg-dark p-3 mb-2">
                                             <span class="user-img me-2">
-                                                <img src="{% static "img/profiles/avatar-01.jpg" %}" alt="">
+                                                <img src="{% static 'img/profiles/avatar-01.jpg' %}" alt="">
                                             </span>
                                             <div>
                                                 <h6 class="text-white mb-1">{{ request.user.username }}</h6>
@@ -371,20 +373,20 @@
                 <!-- Logo -->
                 <div class="sidebar-logo">
                     <a href="{% url 'dashboard' %}" class="logo logo-normal" style="width:110px; margin-top: -10px;">
-                        <img src=" {% static "img/nlogo.png" %}" alt="Logo">
+                        <img src=" {% static 'img/nlogo.png' %}" alt="Logo">
                     </a>
                     <a href="{% url 'dashboard' %}" class="logo-small" style="width:110px; margin-top: -10px;">
-                        <img src="{% static "img/nlogo.png" %}" alt="Logo">
+                        <img src="{% static 'img/nlogo.png' %}" alt="Logo">
                     </a>
                     <a href="{% url 'dashboard' %}" class="dark-logo" style="width:110px; margin-top: -10px;">
-                        <img src="{% static "img/nlogo.png" %}" alt="Logo">
+                        <img src="{% static 'img/nlogo.png' %}" alt="Logo">
                     </a>
                 </div>
                 <!-- /Logo -->
                 <div class="sidebar-header p-3 pb-0">
                     <div class="rounded bg-light p-2 mb-3 sidebar-profile d-flex align-items-center">
                         <div class="avatar online avatar-md onlin">
-                            <img src=" {% static "img/profiles/avatar-16.jpg" %}" alt="Img" class="img-fluid rounded-circle">
+                            <img src=" {% static 'img/profiles/avatar-16.jpg' %}" alt="Img" class="img-fluid rounded-circle">
                         </div>
                         <div class="text-start sidebar-profile-info ms-2">
                             <h6 class="fs-12 fw-normal">{{ request.user.username }}</h6>
@@ -471,32 +473,15 @@
                                             <i class="ti ti-layout-grid-add"></i><span>Dashboard</span>
                                         </a>
                                     </li>
-                                    <li class="submenu">
-                                        <a href="javascript:void(0);">
-                                            <i class="ti ti-layout-list"></i><span>Applications</span>
-                                            <span class="menu-arrow"></span>
+                                    <li>
+                                        <a href="{% url 'workers:worker_list' %}" target="_self">
+                                            <i class="ti ti-users"></i><span>Workers</span>
                                         </a>
-                                        <ul>
-                                            <li><a href="chat.html">Chat</a></li>
-                                            <li class="submenu submenu-two">
-                                                <a href="#">Calls<span class="menu-arrow inside-submenu"></span></a>
-                                                <ul>
-                                                    <li><a href="voice-call.html">Voice Call</a></li>
-                                                    <li><a href="video-call.html">Video Call</a></li>
-                                                    <li><a href="outgoing-call.html">Outgoing Call</a></li>
-                                                    <li><a href="incoming-call.html">Incoming Call</a></li>
-                                                    <li><a href="call-history.html">Call History</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="calendar.html">Calendar</a></li>
-                                            <li><a href="email.html">Email</a></li>
-                                            <li><a href="todo.html">To Do</a></li>
-                                            <li><a href="notes.html">Notes</a></li>
-                                            <li><a href="social-feed.html">Social Feed</a></li>
-                                            <li><a href="file-manager.html">File Manager</a></li>
-                                            <li><a href="kanban-view.html">Kanban</a></li>
-                                            <li><a href="invoices.html">Invoices</a></li>
-                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'managementSystem:register_client' %}" target="_self">
+                                            <i class="ti ti-settings-2"></i><span>Clients</span>
+                                        </a>
                                     </li>
                                     <li>
                                         <a href="../saas-landing/index.html" target="_blank">
