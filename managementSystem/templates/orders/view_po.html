@@ -1,0 +1,50 @@
+<h2>Purchase Order: {{ po.po_number }}</h2>
+<p><strong>Client:</strong> {{ po.client.name }}</p>
+<p><strong>Date:</strong> {{ po.date }}</p>
+<p><strong>Due Date:</strong> {{ po.due_date }}</p>
+<p><strong>Status:</strong> {{ po.status }}</p>
+
+<hr>
+
+<h3>Items</h3>
+<table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.description }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unit_price }}</td>
+            <td>{{ item.total_price }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No items yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><strong>Total Cost:</strong> {{ total_cost }}</p>
+<a href="{% url 'managementSystem:add_order_item' po.id %}">Add Item</a>
+
+<hr>
+
+<h3>Workers Assigned to This Order</h3>
+<ul>
+    {% if workers %}
+        {% for worker in workers %}
+        <li>{{ worker.name }} ({{ worker.role }})</li>
+        {% endfor %}
+    {% else %}
+        <li>No workers assigned yet.</li>
+    {% endif %}
+</ul>
+

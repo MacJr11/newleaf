@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.urls import reverse
+from django.db.models import Sum, F, FloatField
 
 
 
@@ -69,26 +71,89 @@ def client_delete(request, pk):
     except Client.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Client not found.'}, status=404)
     
-def create_order(request, client_id):
-    client = get_object_or_404(Client, id=client_id)
+def orders(request):
+    orders = PurchaseOrder.objects.all().order_by('-id')
 
+    total_orders = orders.count()
+    completed_orders = orders.filter(status="Completed").count()
+    inprogress_orders = orders.filter(status="In Progress").count()
+    pending_orders = orders.filter(status="Pending").count()
+    return render(request, 'orders/orders.html',{
+        'orders': orders,
+        'total_orders': total_orders,
+        'completed_orders': completed_orders,
+        'pending_orders': pending_orders,
+        'inprogress_orders': inprogress_orders,
+    })
+    
+
+def create_order(request):
     if request.method == 'POST':
-        po_number = request.POST.get('po_number')
-        date = request.POST.get('date')
-        due_date = request.POST.get('due_date')
-        status = request.POST.get('status', 'Pending')
+        try:
+            po_number = request.POST.get('po_number')
+            client_id = request.POST.get('client')
+            date_val = request.POST.get('date')
+            due_date = request.POST.get('due_date')
+            status = request.POST.get('status', 'Pending')
 
-        if po_number and date and due_date:
-            order = PurchaseOrder.objects.create(
+            if not all([po_number, client_id, date_val, due_date]):
+                return JsonResponse({'success': False, 'message': 'All fields are required.'})
+
+            client = Client.objects.get(id=client_id)
+            PurchaseOrder.objects.create(
                 po_number=po_number,
                 client=client,
-                date=date,
+                date=date_val,
                 due_date=due_date,
                 status=status
             )
-            return redirect('order_detail', order_id=order.id)  # You can implement this view later
-        else:
-            error = "Please fill all required fields."
-            return render(request, 'create_order.html', {'client': client, 'error': error})
 
-    return render(request, 'create_order.html', {'client': client})
+            return JsonResponse({'success': True, 'message': 'Purchase Order added successfully!'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    # GET request → show form normally
+    clients = Client.objects.all()
+    return render(request, 'orders/add_po.html', {'clients': clients})
+
+def add_order_item(request, po_id):
+    po = get_object_or_404(PurchaseOrder, id=po_id)
+    if request.method == 'POST':
+        description = request.POST.get('description')
+        quantity = request.POST.get('quantity')
+        unit_price = request.POST.get('unit_price')
+
+        OrderItem.objects.create(
+            po=po,
+            description=description,
+            quantity=quantity,
+            unit_price=unit_price
+        )
+
+        return redirect(reverse('managementSystem:view_po', args=[po.id]))
+
+    return render(request, 'orders/add_order_item.html', {'po': po})
+
+def view_po(request, po_id):
+    po = get_object_or_404(PurchaseOrder, id=po_id)
+    items = OrderItem.objects.filter(po=po)
+
+    # Calculate total cost of PO
+    total_cost = items.aggregate(
+        total=Sum(F('quantity') * F('unit_price'), output_field=FloatField())
+    )['total'] or 0
+
+    # Get workers linked to this PO through TaskAssignments
+    task_assignments = TaskAssignment.objects.filter(order_item__po=po).prefetch_related('workers')
+    workers = set()
+    for task in task_assignments:
+        for worker in task.workers.all():
+            workers.add(worker)
+
+    return render(request, 'orders/view_po.html', {
+        'po': po,
+        'items': items,
+        'total_cost': total_cost,
+        'workers': workers
+    })

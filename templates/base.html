@@ -80,14 +80,13 @@
                                     <ul class="dropdown-menu dropdown-menu-start p-2">
                                         <li><a class="dropdown-item d-flex align-items-center" href=" {% url 'workers:worker_list' %}"><i class="ti ti-user me-2"></i>Employee</a></li>
                                         <li><a class="dropdown-item d-flex align-items-center" href="{% url 'managementSystem:register_client' %}"><i class="ti ti-users-plus me-2"></i>Client</a></li>
-                                        <li><a class="dropdown-item d-flex align-items-center" href="projects.html"><i class="ti ti-progress-check me-2"></i>Projects</a></li>
+                                        <li><a class="dropdown-item d-flex align-items-center" href="{% url 'managementSystem:create_order' %}"><i class="ti ti-progress-check me-2"></i>Purchase Order</a></li>
                                         <li><a class="dropdown-item d-flex align-items-center" href="users.html"><i class="ti ti-users me-2"></i>Users</a></li>
                                         <li><a class="dropdown-item d-flex align-items-center" href="manual-time.html"><i class="ti ti-clock me-2"></i>Manual Time</a></li>
                                     </ul>
                                 </div>
-                                <span class="badge badge-md bg-soft-primary badge-time d-inline-flex align-items-center">
-                                <i class="ti ti-clock me-1"></i>15:00:45 PM
-                                </span>
+                                <span class="badge badge-md bg-soft-primary badge-time d-inline-flex align-items-center" id="clock">
+                                <i class="ti ti-clock me-1"></i></span>
                             </div>
 
                             <div class="d-flex align-items-center">
@@ -295,11 +294,6 @@
                                         </div>
                                     </div>
                                 </div> {% endcomment %}
-                                <div class="me-2">
-                                    <a href="profile-settings.html" class="btn btn-menubar">
-                                        <i class="ti ti-settings"></i>
-                                    </a>
-                                </div>
                                 <div class="dropdown profile-dropdown">
                                     <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                         <span class="avatar avatar-md">
@@ -484,8 +478,8 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="../saas-landing/index.html" target="_blank">
-                                            <i class="ti ti-layout"></i><span>SaaS Landing</span>
+                                        <a href="{% url 'managementSystem:orders' %}" target="_self">
+                                            <i class="ti ti-layout"></i><span>Purchase Order</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -1080,6 +1074,15 @@
 
 
 
+        <script>
+            function updateClock() {
+                const now = new Date();
+                document.getElementById("clock").textContent =
+                    now.toLocaleTimeString(); // shows HH:MM:SS
+            }
+            setInterval(updateClock, 1000); // update every second
+            updateClock(); // run immediately
+        </script>
 
     
     
