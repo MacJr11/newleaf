@@ -114,7 +114,11 @@
                             <tr>
                                 <td>
                                     {% if worker.photo %}
-                                        <img src="{{ worker.photo.url }}" alt="Photo" width="50">
+                                        <div class="d-flex align-items-center">
+                                            <a href="#" class="avatar avatar-rounded">
+                                                <img src="{{ worker.photo.url }}" class="img-fluid" alt="img">
+                                            </a>
+                                        </div>
                                     {% else %}
                                         No Photo
                                     {% endif %}

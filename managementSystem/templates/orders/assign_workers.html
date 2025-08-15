@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+ <div class="main-wrapper">
+     <div class="page-wrapper">
+        <div class="content content-two create-project">
+            <div class="container mt-4">
+                <h2>Assign Workers to Purchase Order: {{ po.po_number }}</h2><br>
+            
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            
+                <form method="POST">
+                    {% csrf_token %}
+            
+                    <!-- Order Item -->
+                    <div class="mb-3">
+                        <label for="order_item" class="form-label">Order Item</label>
+                        <select name="order_item" id="order_item" class="form-select" required>
+                            <option value="">-- Select Order Item --</option>
+                            {% for item in items %}
+                                <option value="{{ item.id }}">{{ item.description }} (Qty: {{ item.quantity }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+            
+                    <!-- Workers -->
+                    <div class="mb-3">
+                        <label for="workers" class="form-label">Select Workers</label>
+                        <select name="workers" id="workers" class="form-select select2" multiple required>
+                            {% for worker in workers %}
+                                <option value="{{ worker.id }}">{{ worker.name }} - {{ worker.role }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+            
+                    <!-- Deadline -->
+                    <div class="mb-3">
+                        <label for="deadline" class="form-label">Deadline</label>
+                        <input type="date" name="deadline" id="deadline" class="form-control" required>
+                    </div>
+            
+                    <!-- Group Task -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="is_group_task" id="is_group_task" disabled>
+                        <label class="form-check-label" for="is_group_task">
+                            Mark as Group Task
+                        </label>
+                    </div>
+            
+                    <!-- Price Per Task -->
+                    <div class="mb-3">
+                        <label for="price_per_task" class="form-label">Price Per Task</label>
+                        <input type="number" step="0.01" name="price_per_task" id="price_per_task" class="form-control" required>
+                    </div>
+            
+                    <!-- Submit -->
+                    <button type="submit" class="btn btn-primary">Assign Workers</button>
+                    <a href="{% url 'managementSystem:view_po' po.id %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+     </div>
+ </div>
+
+
+ <!-- jQuery -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" type=""></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="{% static 'js/jquery.slimscroll.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Select2 JS -->
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Datetimepicker JS -->
+    <script src="{% static 'js/moment.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+    <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/script.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="ac3f8615a263811875ad4144-|49" defer=""></script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const workersSelect = document.getElementById("workers");
+    const groupTaskCheckbox = document.getElementById("is_group_task");
+
+    $('#workers').on('change', function () {
+        const selectedCount = $(this).val().length;
+        if (selectedCount > 1) {
+            groupTaskCheckbox.disabled = false;
+        } else {
+            groupTaskCheckbox.disabled = true;
+            groupTaskCheckbox.checked = false;
+        }
+    });
+});
+</script>
+{% endblock %}
