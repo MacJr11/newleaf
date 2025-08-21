@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="main-wrapper">
+          <div class="page-wrapper">
+            <div class="content content-two create-project">
+                <form method="post" id="poForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <div class="mb-3">
+                                <a href="{% url 'managementSystem:orders' %}"><i class="ti ti-arrow-narrow-left me-1"></i>Back to  Purchase Order</a>
+                            </div>
+                            <div class="card shadow-none">
+                                <div class="card-body">
+                                    <h5 class="fw-bold mb-3">Details</h5>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Purchase Order Number<span class="text-danger ms-1">*</span></label>
+                                                <input class="form-control" name="po_number" value="{{ order.po_number }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Client<span class="text-danger ms-1">*</span></label>
+                                                <select class="select2" name="client" required>
+                                                    {% for client in clients %}
+                                                        <option value="{{ client.id }}" {% if client.id == order.client.id %}selected{% endif %} > {{ client.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Date<span class="text-danger ms-1">*</span></label>
+                                                <div class="input-icon-end position-relative">
+                                                    <input type="date" class="form-control" name="date" value="{{ order.date|date:'Y-m-d' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Due date<span class="text-danger ms-1">*</span></label>
+                                                <div class="input-icon-end position-relative">
+                                                    <input type="date" class="form-control" name="due_date" value="{{ order.due_date|date:'Y-m-d' }}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
+                                                <select class="select" name="status">
+                                                    <option value="Pending" {% if order.status == "Pending" %}selected{% endif %}>Pending</option>
+                                                    <option value="Completed" {% if order.status == "Completed" %}selected{% endif %}>Completed</option>
+                                                    <option value="In progress" {% if order.status == "In progress" %}selected{% endif %}>In progress</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-white btn-md me-2 clsrfsh" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary btn-md">Update Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" type=""></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="{% static 'js/jquery.slimscroll.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Select2 JS -->
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Datetimepicker JS -->
+    <script src="{% static 'js/moment.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+    <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/script.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="ac3f8615a263811875ad4144-|49" defer=""></script>
+
+
+    <script>
+     document.getElementById('poForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch("{% url 'managementSystem:edit_po' po.id %}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")  // ✅ Needed for Django
+                    }
+                });
+
+                // First try parsing JSON
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await response.json();
+                    if (data.success) {
+                        alert(data.message);
+                        window.location.href = "{% url 'managementSystem:view_po' po.id  %}";
+                        this.reset();
+                    } else {
+                        alert(data.message || "Error updating purchase order.");
+                    }
+                } else {
+                    // If not JSON, log the text (likely an HTML error page)
+                    const text = await response.text();
+                    console.error("Server returned non-JSON response:", text);
+                    alert("Unexpected server response. Check console for details.");
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+                alert("Network or server error occurred.");
+            }
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== "") {
+                    const cookies = document.cookie.split(";");
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        });
+
+    </script>
+
+    <script>
+    $('.clsrfsh').click(function(){
+        window.location.href = "{% url 'managementSystem:orders' %}";
+    });
+    </script>
+{% endblock %}

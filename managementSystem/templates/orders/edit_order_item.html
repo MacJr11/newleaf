@@ -6,7 +6,7 @@
      <div class="page-wrapper">
         <div class="content content-two create-project">
             <div class="container mt-4">
-                <h2>Add Item to PO: {{ po.po_number }}</h2><br>
+                <h2>Edit Item to PO: {{ item.po }}</h2><br>
             
                 {% if messages %}
                     {% for message in messages %}
@@ -14,30 +14,31 @@
                     {% endfor %}
                 {% endif %}
             
-                <form method="POST">
+                <form method="POST" id="editItemForm">
                     {% csrf_token %}
             
                     <!-- Order Item -->
                     <div class="mb-3">
                         <label for="order_item" class="form-label">Description</label>
-                        <textarea name="description" class="form-control" required></textarea>
+                        <textarea name="description" class="form-control" required>{{ item.description }}</textarea>
                     </div>
             
                     <!-- Workers -->
                     <div class="mb-3">
                         <label for="workers" class="form-label">Quantity:</label>
-                        <input type="number" name="quantity" id="deadline" class="form-control" required>
+                        <input type="number" name="quantity" min="1" class="form-control" value="{{ item.quantity }}" required>
                     </div>
             
                     <!-- Deadline -->
                     <div class="mb-3">
                         <label for="deadline" class="form-label">Unit Price</label>
-                        <input type="number" name="unit_price" id="deadline" step="0.01" class="form-control" required>
+                        <input type="number" name="unit_price" step="0.01" value="{{ item.unit_price }}" class="form-control" required>
                     </div>
             
                     <!-- Submit -->
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a href="{% url 'managementSystem:view_po' po.id %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Item</button>
+                    <button type="button" class="btn btn-secondary clsrfsh">Cancel</button>
+                    
                 </form>
             </div>
         </div>
@@ -68,19 +69,28 @@
 
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const workersSelect = document.getElementById("workers");
-    const groupTaskCheckbox = document.getElementById("is_group_task");
+document.getElementById('editItemForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const formData = new FormData(this);
 
-    $('#workers').on('change', function () {
-        const selectedCount = $(this).val().length;
-        if (selectedCount > 1) {
-            groupTaskCheckbox.disabled = false;
-        } else {
-            groupTaskCheckbox.disabled = true;
-            groupTaskCheckbox.checked = false;
-        }
+    const response = await fetch("", {
+        method: "POST",
+        body: formData
     });
+
+    const data = await response.json();
+    if (data.success) {
+        alert(data.message);
+        window.location.href = "{% url 'managementSystem:view_po' item.po.id %}"; // go back after edit
+    } else {
+        alert("Error updating item!");
+    }
 });
+</script>
+
+ <script>
+    $('.clsrfsh').click(function(){
+        window.location.href = "{% url 'managementSystem:view_po' item.po.id %}";
+    });
 </script>
 {% endblock %}

@@ -147,13 +147,7 @@
                                             <a href="{% url 'managementSystem:view_po' order.id %}" class="dropdown-item rounded-2"><i class="ti ti-eye me-2 text-gray-5"></i>View Details</a>
                                         </li>
                                         <li>
-                                            <a href="edit-project.html" class="dropdown-item rounded-2"><i class="ti ti-edit me-2 text-gray-5"></i>Edit Project</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);" class="dropdown-item rounded-2"><i class="ti ti-copy me-2 text-gray-5"></i>Clone Project</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);" class="dropdown-item rounded-2"><i class="ti ti-archive me-2 text-gray-5"></i>Archive Project</a>
+                                            <a href="{% url 'managementSystem:edit_po' order.id %}" class="dropdown-item rounded-2"><i class="ti ti-edit me-2 text-gray-5"></i>Edit Project</a>
                                         </li>
                                     </ul>
                                 </td>

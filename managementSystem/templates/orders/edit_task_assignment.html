@@ -6,36 +6,22 @@
      <div class="page-wrapper">
         <div class="content content-two create-project">
             <div class="container mt-4">
-                <h2>Assign Workers to Purchase Order: {{ po.po_number }}</h2><br>
+                <h2>Edit Workers on Order Item: {{ task.order_item.description }}</h2><br>
             
                 {% if messages %}
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
-                            {{ message }} 
-                        </div><a href="{% url 'managementSystem:view_po' po.id %}">back</a>
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
                     {% endfor %}
                 {% endif %}
             
-                <form method="POST">
-                    {% csrf_token %}
-            
-                    <!-- Order Item -->
-                    <div class="mb-3">
-                        <label for="order_item" class="form-label">Order Item</label>
-                        <select name="order_item" id="order_item" class="form-select" required>
-                            <option value="">-- Select Order Item --</option>
-                            {% for item in items %}
-                                <option value="{{ item.id }}">{{ item.description }} (Qty: {{ item.quantity }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-            
+                <form method="POST" id="editTaskForm">
+                    {% csrf_token %}            
                     <!-- Workers -->
                     <div class="mb-3">
                         <label for="workers" class="form-label">Select Workers</label>
                         <select name="workers" id="workers" class="form-select select2" multiple required>
                             {% for worker in workers %}
-                                <option value="{{ worker.id }}">{{ worker.name }} - {{ worker.role }}</option>
+                                <option value="{{ worker.id }}" {% if worker in task.workers.all %}selected{% endif %}>{{ worker.name }} - {{ worker.role }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -43,7 +29,7 @@
                     <!-- Deadline -->
                     <div class="mb-3">
                         <label for="deadline" class="form-label">Deadline</label>
-                        <input type="date" name="deadline" id="deadline" class="form-control" required>
+                        <input type="date" name="deadline" id="deadline" value="{{ task.deadline|date:'Y-m-d' }}"  class="form-control" required>
                     </div>
             
                     <!-- Group Task -->
@@ -57,12 +43,12 @@
                     <!-- Price Per Task -->
                     <div class="mb-3">
                         <label for="price_per_task" class="form-label">Price Per Task</label>
-                        <input type="number" step="0.01" name="price_per_task" id="price_per_task" class="form-control" required>
+                        <input type="number" step="0.01" name="price_per_task" id="price_per_task" value="{{ task.price_per_task }}" class="form-control" required>
                     </div>
             
                     <!-- Submit -->
-                    <button type="submit" class="btn btn-primary">Assign Workers</button>
-                    <a href="{% url 'managementSystem:view_po' po.id %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Workers</button>
+                    <a href="{% url 'managementSystem:view_po' task.order_item.po.id %}" class="btn btn-secondary">Cancel</a>
                 </form>
             </div>
         </div>
@@ -94,18 +80,41 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const workersSelect = document.getElementById("workers");
     const groupTaskCheckbox = document.getElementById("is_group_task");
 
     $('#workers').on('change', function () {
-        const selectedCount = $(this).val().length;
+        const selectedCount = $(this).val() ? $(this).val().length : 0;
+
         if (selectedCount > 1) {
             groupTaskCheckbox.disabled = false;
+            groupTaskCheckbox.checked = true;   // auto-check
         } else {
             groupTaskCheckbox.disabled = true;
-            groupTaskCheckbox.checked = false;
+            groupTaskCheckbox.checked = false;  // uncheck if ≤ 1
         }
     });
+
+    // run once on page load (in case workers were already preselected)
+    $('#workers').trigger('change');
+});
+</script>
+<script>
+document.getElementById('editTaskForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    const response = await fetch("", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await response.json();
+    if (data.success) {
+        alert(data.message);
+        window.location.href = "{% url 'managementSystem:view_po' task.order_item.po.id %}";
+    } else {
+        alert(data.message);
+    }
 });
 </script>
 {% endblock %}

@@ -118,6 +118,28 @@ def create_order(request):
     clients = Client.objects.all()
     return render(request, 'orders/add_po.html', {'clients': clients})
 
+def edit_po(request, po_id):
+    order = get_object_or_404(PurchaseOrder, id=po_id)
+    clients = Client.objects.all()
+
+    if request.method == "POST":
+        order.po_number = request.POST.get("po_number")
+        order.client_id = request.POST.get("client")
+        order.date = request.POST.get("date")
+        order.due_date = request.POST.get("due_date")
+        order.status = request.POST.get("status")
+        order.save()
+
+        return JsonResponse({
+            "success": True,
+            "message": "Purchase order updated successfully!"
+        })
+    return render(request, 'orders/edit_po.html',{
+        'order': order,
+        'clients': clients,
+        'po': order
+    })
+
 def add_order_item(request, po_id):
     po = get_object_or_404(PurchaseOrder, id=po_id)
     if request.method == 'POST':
@@ -154,15 +176,15 @@ def view_po(request, po_id):
         for worker in task.workers.all():
             workers.add(worker)
 
-    # total workers
-    assignments = TaskAssignment.objects.filter(order_item__in=items).prefetch_related('workers')
+    # # total workers
+    # assignments = TaskAssignment.objects.filter(order_item__in=items).prefetch_related('workers')
 
-    workers_set = set()
-    for assignment in assignments:
-        for worker in assignment.workers.all():
-            workers_set.add(worker.id)
+    # # workers_set = set()
+    # # for assignment in assignments:
+    # #     for worker in assignment.workers.all():
+    # #         workers_set.add(worker.id)
     
-    total_workers = len(workers_set)
+    # # total_workers = len(workers_set)
 
     # Prepare items with their assigned workers
     item_workers = []
@@ -177,9 +199,11 @@ def view_po(request, po_id):
 
     #total workers on item
     for item in items:
-        item.worker_count = TaskAssignment.objects.filter(order_item=item).aggregate(
-            total_workers=Count('workers', distinct=True)
-        )['total_workers'] or 0
+        item.worker_count = TaskAssignment.objects.filter(order_item=item) \
+            .annotate(num_workers=Count('workers')) \
+            .aggregate(total_workers=Sum('num_workers'))['total_workers'] or 0
+    
+    grand_total_workers = sum(item.worker_count for item in items)
 
     return render(request, 'orders/view_po.html', {
         'po': po,
@@ -187,8 +211,10 @@ def view_po(request, po_id):
         'total_cost': total_cost,
         'workers': workers,
         'total_items': total_items,
-        'total_workers': total_workers,
+        'grand_total_workers': grand_total_workers,
         "item_workers": item_workers,
+        "task_assignments": task_assignments
+
     })
 
 
@@ -208,12 +234,11 @@ def assign_workers(request, po_id):
 
         # Validate selection
         if not selected_workers:
-            messages.error(request, "No workers selected.")
+            messages.warning(request, "No workers selected.")
             return redirect("managementSystem:assign_workers", po_id=po.id)
 
         if not is_group_task and len(selected_workers) > 1:
-            messages.error(request, "You must mark as group task when assigning more than one worker.")
-            return redirect("managementSystem:assign_workers", po_id=po.id)
+            messages.warning(request, "You must mark as group task when assigning more than one worker.")
 
         # Prevent assigning a worker who is already assigned to this order item
         existing_workers = Worker.objects.filter(
@@ -222,23 +247,91 @@ def assign_workers(request, po_id):
         duplicate_ids = set(map(int, selected_workers)) & set(existing_workers)
         if duplicate_ids:
             messages.warning(request, "Some selected workers are already assigned to this task.")
-            return redirect("managementSystem:assign_workers", po_id=po.id)
 
-        # Create task assignment
-        order_item = get_object_or_404(OrderItem, id=order_item_id)
-        task = TaskAssignment.objects.create(
-            order_item=order_item,
-            deadline=deadline,
-            is_group_task=is_group_task,
-            price_per_task=price_per_task
-        )
-        task.workers.set(selected_workers)
+        
+        order_item = get_object_or_404(OrderItem, id=order_item_id)    
+        existing_task = TaskAssignment.objects.filter(order_item=order_item).first()
 
-        messages.success(request, "Workers assigned successfully!")
-        return redirect("managementSystem:view_po", po_id=po.id)
+        if existing_task:
+            # Append new workers to existing task
+            current_workers = set(existing_task.workers.values_list("id", flat=True))
+            new_workers = set(map(int, selected_workers))
+            all_workers = current_workers.union(new_workers)
+            existing_task.workers.set(all_workers)
+
+            # Automatically switch to group task if workers > 1
+            if len(all_workers) > 1:
+                existing_task.is_group_task = True
+
+            # update other fields if needed
+            existing_task.deadline = deadline
+            existing_task.price_per_task = price_per_task
+            existing_task.save()
+            messages.success(request, "Workers assigned successfully!")
+        else:
+            # Create task assignment
+            task = TaskAssignment.objects.create(
+                order_item=order_item,
+                deadline=deadline,
+                is_group_task=is_group_task,
+                price_per_task=price_per_task
+            )
+            task.workers.set(selected_workers)
+            messages.success(request, "Workers assigned successfully!")
 
     return render(request, "orders/assign_workers.html", {
         "po": po,
         "items": items,
         "workers": workers
+    })
+
+def edit_order_item(request, item_id):
+    item = get_object_or_404(OrderItem, id=item_id)
+
+    if request.method == "POST":
+        item.description = request.POST.get("description")
+        item.quantity = request.POST.get("quantity")
+        item.unit_price = request.POST.get("unit_price")
+        item.save()
+
+        return JsonResponse({"success": True, "message": "Item updated successfully!"})
+
+    return render(request, "orders/edit_order_item.html", {
+        "item": item,
+    })
+
+def delete_order_item(request, item_id):
+    item = get_object_or_404(OrderItem, id=item_id)
+    po_id = item.po.id
+    item.delete()
+    return JsonResponse({"success": True, "message": "Item deleted successfully!"})
+
+
+def edit_task_assignment(request, task_id):
+    task = get_object_or_404(TaskAssignment, id=task_id)
+    workers = Worker.objects.filter(is_active=True)
+
+    if request.method == "POST":
+        selected_workers = request.POST.getlist("workers")
+        deadline = request.POST.get("deadline")
+        is_group_task = request.POST.get("is_group_task") == "on"
+        price_per_task = request.POST.get("price_per_task")
+
+        # Rules
+        if len(selected_workers) == 1 and is_group_task:
+            return JsonResponse({"success": False, "message": "Group task cannot be set with only one worker."})
+        if len(selected_workers) > 1 and not is_group_task:
+            return JsonResponse({"success": False, "message": "Multiple workers require group task selection."})
+
+        task.deadline = deadline
+        task.is_group_task = is_group_task
+        task.price_per_task = price_per_task
+        task.workers.set(selected_workers)
+        task.save()
+
+        return JsonResponse({"success": True, "message": "Task assignment updated successfully!"})
+
+    return render(request, "orders/edit_task_assignment.html", {
+        "task": task,
+        "workers": workers,
     })
