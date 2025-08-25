@@ -113,13 +113,15 @@
 
                 <!-- Search -->
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 table-header mb-3">
-                    
+                    <div class="filters mb-3">
+                        <input type="text" id="searchInput" placeholder="Search Purchase Order..." class="form-control" style="width:200px; display:inline-block;">
+                    </div>
                 </div>
                 <!-- /Search -->
 
                 <!-- Table List -->
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table" id="ordertable">
                         <thead class="thead-light text-uppercase">
                             <tr>
                                 <th class="no-sort">Purchase Order Code</th>
@@ -196,4 +198,55 @@
     <script src="{% static 'js/script.js' %}" type="a9f3c08bf8988559a66fb1f1-text/javascript"></script>
 
 <script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="a9f3c08bf8988559a66fb1f1-|49" defer=""></script>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+                const searchInput = document.getElementById('searchInput');
+                const tableBody = document.querySelector('#ordertable tbody');
+
+                searchInput.addEventListener('keyup', function() {
+                    let query = searchInput.value.trim();
+
+                    fetch("{% url 'managementSystem:po_search' %}?q=" + encodeURIComponent(query))
+                        .then(response => response.json())
+                        .then(data => {
+                            tableBody.innerHTML = '';
+
+                            data.results.forEach(order => {
+                                let row = `
+                                     <tr>
+                                        <td>${order.po_number}</td>
+                                        <td>${order.client || ''}</td>
+                                        <td>${order.date || ''}</td>
+                                        <td>${order.due_date || ''}</td>
+                                        <td>${order.status || ''}</td>
+                                    </tr>
+                                `;
+                                tableBody.innerHTML += row;
+                            });
+                        })
+                        .catch(err => console.error('Search error:', err));
+                });
+            });
+
+            // CSRF helper
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let cookie of cookies) {
+                        cookie = cookie.trim();
+                        if (cookie.startsWith(name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+</script>
+
+
+
+
 {% endblock %}

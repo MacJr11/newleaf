@@ -15,4 +15,5 @@ urlpatterns = [
     path("edit_order_item/<int:item_id>/", views.edit_order_item, name="edit_order_item"),
     path("delete_order_item/<int:item_id>/", views.delete_order_item, name="delete_order_item"),
     path("edit_task_assignment/<int:task_id>/", views.edit_task_assignment, name="edit_task_assignment"),
+    path('search/', views.po_search, name='po_search'),
 ]

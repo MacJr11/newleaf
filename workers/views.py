@@ -119,5 +119,31 @@ def worker_delete(request, pk):
     except Worker.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Worker not found.'}, status=404)
 
+def worker_profile(request, worker_id):
+    worker = get_object_or_404(Worker, id=worker_id)
+
+    # All task assignments for this worker
+    task_assignments = worker.taskassignment_set.select_related("order_item__po").prefetch_related("workers")
+
+    total_tasks = task_assignments.count()
+    completed_tasks = task_assignments.filter(order_item__po__status="Completed").count()
+
+    # Calculate earnings
+    total_earnings = 0
+    for task in task_assignments:
+        if task.is_group_task:
+            worker_share = (task.price_per_task * task.order_item.quantity) / task.workers.count() if task.workers.count() > 0 else 0
+        else:
+            worker_share = task.price_per_task
+        total_earnings += worker_share
+
+    return render(request, "workers/worker_profile.html", {
+        "worker": worker,
+        "task_assignments": task_assignments,
+        "total_tasks": total_tasks,
+        "completed_tasks": completed_tasks,
+        "total_earnings": total_earnings,
+    })
+
 
 

@@ -1,0 +1,45 @@
+<h2>{{ worker.name }} - {{ worker.role }}</h2>
+<p><strong>Contact:</strong> {{ worker.phone }}</p>
+<p><strong>Status:</strong> {% if worker.is_active %} Active {% else %} Inactive {% endif %}</p>
+
+<hr>
+
+<h3>Task Assignments</h3>
+{% if task_assignments %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Purchase Order</th>
+                <th>Order Item</th>
+                <th>Deadline</th>
+                <th>Group Task?</th>
+                <th>Price per Task</th>
+                <th>Your Share</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in task_assignments %}
+                <tr>
+                    <td>{{ task.order_item.po.po_number }}</td>
+                    <td>{{ task.order_item.description }}</td>
+                    <td>{{ task.deadline }}</td>
+                    <td>{% if task.is_group_task %} Yes {% else %} No {% endif %}</td>
+                    <td>{{ task.price_per_task }}</td>
+                    <td>
+                        {% if task.is_group_task %}
+                            {{ task.price_per_task|divisibleby:task.workers.count }} (shared)
+                        {% else %}
+                            {{ task.price_per_task }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><strong>Total Tasks:</strong> {{ total_tasks }}</p>
+    <p><strong>Completed Tasks:</strong> {{ completed_tasks }}</p>
+    <p><strong>Total Earnings:</strong> GHS {{ total_earnings|floatformat:2 }}</p>
+{% else %}
+    <p>No tasks assigned to this worker yet.</p>
+{% endif %}

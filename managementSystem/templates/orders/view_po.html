@@ -173,7 +173,7 @@
                                                                 {{ task.order_item.description }}
                                                             </td>
                                                         {% endif %}
-                                                        <td>{{ worker.name }}</td>
+                                                        <td> <a href="{% url 'workers:worker_profile' worker.id %}">{{ worker.name }}</a></td>
                                                         <td>{{ worker.role }}</td>
                                                         {% if forloop.first %}
                                                             <td rowspan="{{ task.workers.count }}">

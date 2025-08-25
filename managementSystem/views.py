@@ -7,6 +7,7 @@ from django.views.decorators.http import require_POST
 from django.urls import reverse
 from django.db.models import Sum, F, FloatField
 from django.db.models import Count
+from django.db.models import Q
 from django.contrib import messages
 
 
@@ -86,6 +87,28 @@ def orders(request):
         'pending_orders': pending_orders,
         'inprogress_orders': inprogress_orders,
     })
+
+# Search PO via AJAX
+def po_search(request):
+    query = request.GET.get('q', '').strip()
+
+    orders = PurchaseOrder.objects.all()
+    if query:
+        orders = orders.filter(
+            Q(po_number__icontains=query) |
+            Q(status__icontains=query) 
+        )
+
+    results = [{
+        'id': p.id,
+        'po_number': p.po_number,
+        'client': p.client,
+        'date': p.date.strftime("%Y-%m-%d"),
+        'due_date': p.due_date.strftime("%Y-%m-%d"),
+        'status': p.status,
+    } for p in orders]
+
+    return JsonResponse({'results': results})
     
 
 def create_order(request):

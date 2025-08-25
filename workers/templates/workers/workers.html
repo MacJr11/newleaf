@@ -115,12 +115,16 @@
                                 <td>
                                     {% if worker.photo %}
                                         <div class="d-flex align-items-center">
-                                            <a href="#" class="avatar avatar-rounded">
+                                            <a href="{% url 'workers:worker_profile' worker.id %}" class="avatar avatar-rounded">
                                                 <img src="{{ worker.photo.url }}" class="img-fluid" alt="img">
                                             </a>
                                         </div>
                                     {% else %}
-                                        No Photo
+                                        <div class="d-flex align-items-center">
+                                            <a href="{% url 'workers:worker_profile' worker.id %}" class="avatar avatar-rounded">
+                                                No photo
+                                            </a>
+                                        </div>
                                     {% endif %}
                                 </td>
                                 <td>{{ worker.name }}</td>
