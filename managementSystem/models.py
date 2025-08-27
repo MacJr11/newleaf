@@ -1,5 +1,6 @@
 from django.db import models
 from workers.models import Worker
+from django.utils import timezone
 
 
 class Client(models.Model):
@@ -28,6 +29,7 @@ class OrderItem(models.Model):
     description = models.TextField()
     quantity = models.PositiveIntegerField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, default='Pending')
 
     def total_price(self):
         return self.quantity * self.unit_price
@@ -57,4 +59,18 @@ class TaskAssignment(models.Model):
 
     def __str__(self):
         return f"Task for: {self.order_item}"
+
+class Invoice(models.Model):
+    po = models.OneToOneField(PurchaseOrder, on_delete=models.CASCADE, related_name="invoice")
+    issued_date = models.DateField(auto_now_add=True)
+    due_date = models.DateField(null=True, blank=True)
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    status = models.CharField(
+        max_length=20,
+        choices=[("Pending", "Pending"), ("Paid", "Paid")],
+        default="Pending"
+    )
+
+    def __str__(self):
+        return f"Invoice for PO {self.po.id} - {self.status}"
 

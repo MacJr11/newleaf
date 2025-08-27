@@ -9,6 +9,7 @@ from django.db.models import Sum, F, FloatField
 from django.db.models import Count
 from django.db.models import Q
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def register_client(request):
@@ -102,7 +103,7 @@ def po_search(request):
     results = [{
         'id': p.id,
         'po_number': p.po_number,
-        'client': p.client,
+        'client': p.client.name,
         'date': p.date.strftime("%Y-%m-%d"),
         'due_date': p.due_date.strftime("%Y-%m-%d"),
         'status': p.status,
@@ -358,3 +359,54 @@ def edit_task_assignment(request, task_id):
         "task": task,
         "workers": workers,
     })
+
+
+@login_required
+def view_invoice(request, invoice_id):
+    invoice = get_object_or_404(Invoice, id=invoice_id)
+    po = invoice.po  
+
+    # fetch order items that belong to this PO
+    order_items = OrderItem.objects.filter(po=po)
+
+    # add line_total for each item
+    for item in order_items:
+        qty = item.quantity or 0
+        price = item.unit_price or 0
+        item.line_total = qty * price
+
+    grand_total = sum(item.line_total for item in order_items)
+
+    return render(request, "invoices/view_invoice.html", {
+        "invoice": invoice,
+        "po": po,
+        "order_items": order_items,
+        'grand_total': grand_total,
+    })
+
+
+@login_required
+def generate_invoice(request, po_id):
+    po = get_object_or_404(PurchaseOrder, id=po_id)
+
+    # prevent duplicate invoices
+    if hasattr(po, "invoice"):
+        return redirect("managementSystem:view_invoice", invoice_id=po.invoice.id)
+
+    # calculate total amount from order items
+    items = OrderItem.objects.filter(po=po)
+    total_amount = sum(item.unit_price * item.quantity for item in items)
+
+    invoice = Invoice.objects.create(
+        po=po,
+        total_amount=total_amount,
+        status="Pending"
+    )
+
+    return redirect("managementSystem:view_invoice", invoice_id=invoice.id)
+
+def mark_invoice_paid(request, invoice_id):
+    invoice = get_object_or_404(Invoice, id=invoice_id)
+    invoice.status = "Paid"
+    invoice.save()
+    return redirect("managementSystem:view_invoice", invoice_id=invoice.id)

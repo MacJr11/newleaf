@@ -21,6 +21,13 @@ class ClientAdmin(admin.ModelAdmin):
     search_fields = ('name', 'phone')
 
 
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('po', 'description', 'quantity', 'unit_price', 'status')
+    search_fields = ('description', 'po')
+
+
 @admin.register(TaskAssignment)
 class TaskAssignmentAdmin(admin.ModelAdmin):
     list_display = ('order_item', 'deadline', 'is_group_task', 'price_per_task', 'status')

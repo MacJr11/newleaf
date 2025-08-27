@@ -16,4 +16,7 @@ urlpatterns = [
     path("delete_order_item/<int:item_id>/", views.delete_order_item, name="delete_order_item"),
     path("edit_task_assignment/<int:task_id>/", views.edit_task_assignment, name="edit_task_assignment"),
     path('search/', views.po_search, name='po_search'),
+    path("invoice/<int:invoice_id>/", views.view_invoice, name="view_invoice"),
+    path("invoice/<int:invoice_id>/mark-paid/", views.mark_invoice_paid, name="mark_invoice_paid"),
+    path("purchase-order/<int:po_id>/generate-invoice/", views.generate_invoice, name="generate_invoice"),
 ]

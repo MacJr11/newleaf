@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="main-wrapper">
+      <!-- Page wrapper -->
+        <div class="page-wrapper">
+            <div class="content">
+                <!-- Breadcrumb -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <a href="{% url 'managementSystem:view_po' po.id %}" class="fw-medium"><i class="ti ti-circle-arrow-left text-primary me-1"></i>Invoice Details</a>
+                    <a href="javascript:void(0);" class="text-primary"><i class="ti ti-download me-1"></i>Download</a>
+                </div>
+                <!-- /Breadcrumb -->
+
+                <!-- Invoices -->
+                <div class="card">
+                    <div class="card-body" id="invoiceArea">
+                        <div class="row justify-content-between align-items-center border-bottom mb-4">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <img src="{% static 'img/nlogo.svg' %}" width="230" class="img-fluid" alt="logo">
+                                </div>
+                                <p>Designers of industrial garments, working gears and all kinds of company uniform</p>
+                            </div>
+                            <div class="col-md-6">
+                                <div class=" text-end mb-3">
+                                    <h5 class="text-gray-500 mb-1">Invoice No <span class="text-primary">#{{ invoice.id }}</span></h5>
+                                    <p class="mb-1 fw-medium">Created Date : <span class="text-dark">{{ invoice.issued_date|date:"d M Y" }}</span> </p>
+                                    <p class="fw-medium">Due Date : <span class="text-dark">{{ invoice.due_date|date:"d M Y" }}</span> </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row border-bottom mb-4">
+                            <div class="col-md-5">
+                                <p class="text-dark mb-2 fw-semibold">From</p>
+                                <div>
+                                    <p class="text-gray-9 fw-medium mb-1">Newleaf Creations</p>
+                                    <p class="mb-1">P.O.Box 89, Konongo-Asante Akyem Central</p>
+                                    <p class="mb-1">Email : <span class="text-dark">newleafcreations@yahoo.com</span></p>
+                                    <p>Phone : <span class="text-dark">+233 24 4033 849 | +233 20 8121 352 | +233 55 3173 116</span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <p class="text-dark mb-2 fw-semibold">To</p>
+                                <div>
+                                    <p class="text-gray-9 fw-medium mb-1">{{po.client.name}}</p>
+                                    <p class="mb-1">{{po.client.address}}</p>
+                                    <p class="mb-1">Email : <span class="text-dark">{{po.client.contact_email}}</span></p>
+                                    <p>Phone : <span class="text-dark">{{po.client.phone}}</span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <p class="text-title mb-2 fw-medium">Payment Status </p>
+                                    <span class="bg-success text-white fs-10 px-1 rounded"><i class="ti ti-point-filled "></i>{{ po.status }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="fw-medium">Invoice For : <span class="text-dark fw-medium">Purchase Order #{{ po.po_number }}</span></p>
+                            <div class="table-responsive mb-4">
+                                <table class="table border">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="text-gray-9 fs-14 fw-medium ">Item</th>
+                                            <th class="text-gray-9 fs-14 fw-medium text-end">Quantity</th>
+                                            <th class="text-gray-9 fs-14 fw-medium text-end">Unit Price (GHS)</th>
+                                            <th class="text-gray-9 fs-14 fw-medium text-end">Total (GHS)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order_items %}
+                                        <tr>
+                                            <td class="text-gray-9 fs-14 fw-medium">{{ item.description }}</td>
+                                            <td class="text-end">{{ item.quantity }}</td>
+                                            <td class="text-end">{{ item.unit_price|floatformat:2 }}</td>
+                                            <td class="text-end">{{ item.line_total|floatformat:2 }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row border-bottom mb-4">
+                                <div class="col-md-5 ms-auto mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2 pe-3">
+                                        <h5>Total Amount</h5>
+                                        <h5>GH₵{{ grand_total|floatformat:2 }}</h5>
+                                    </div>
+                                    <!-- <p class="fs-14">
+                                        Amount in Words : Dollar Nine Hundred Fifty
+                                    </p> -->
+                                </div>
+                            </div>
+                            <div class="row align-items-center border-bottom mb-4">
+                                <div class="col-md-7">
+                                    <div>
+                                        <div class="mb-3">
+                                            <h6 class="mb-1">Terms and Conditions</h6>
+                                            <p>Goods sold are not returnable</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6 class="mb-1">Notes</h6>
+                                            <p>Please ensure that all booking details are correct before proceeding with payment.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="text-end">
+                                        <img src="{% static 'img/icons/sign.svg'%}" class="img-fluid" alt="sign">
+                                    </div>
+                                    <div class="text-end mb-3">
+                                        <h6 class="fs-14 fw-medium pe-3"></h6>
+                                        <p>Manager</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div class="mb-4">
+                                    <img src="{% static 'img/nlogo.svg' %}" width="200" class="img-fluid" alt="sign">
+                                </div>
+                                <p class="text-dark mb-1">Payment Made Via bank transfer / Cheque in the name of Thomas Lawler</p>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <p class="fs-12 mb-0 me-3">Bank Name : <span class="text-dark">HDFC Bank</span></p>
+                                    <p class="fs-12 mb-0 me-3">Account Number : <span class="text-dark">45366287987</span></p>
+                                    <p class="fs-12">IFSC : <span class="text-dark">HDFC0018159</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Invoices -->
+
+                    <div class="d-flex justify-content-center align-items-center mb-4">
+                        <button onclick="printInvoice()" class="btn btn-primary d-flex justify-content-center align-items-center me-2">Print Invoice</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- /Page wrapper -->
+        </div>
+</div>
+
+
+<script data-cfasync="false" src="{% static 'cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min-2.js' %}">
+
+</script><script src="{% static 'js/jquery-3.7.1.min.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<!-- Bootstrap Core JS -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<!-- Slimscroll JS -->
+<script src="{% static 'js/jquery.slimscroll.min.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<!-- Select2 JS -->
+<script src="{% static 'plugins/select2/js/select2.min.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<!-- Custom JS -->
+<script src="{% static 'js/script.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="bffac48742d7418334c7bee8-|49" defer=""></script>
+
+<script>
+function printInvoice() {
+    const printContents = document.getElementById('invoiceArea').innerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    location.reload();
+}
+</script>
+
+{% endblock %}

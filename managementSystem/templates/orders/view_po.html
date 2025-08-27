@@ -26,7 +26,20 @@
                     </div>
                     <div class="d-flex align-items-center">
                         <a href="{% url 'managementSystem:edit_po' po.id %}" class="btn btn-md btn-primary fs-13 fw-medium me-2" data-bs-target="#edit-manual-time" data-bs-toggle=""><i class="ti ti-edit me-1"></i>Edit</a>
-                        <a href="{% url 'managementSystem:assign_workers' po.id %}" class="btn btn-md btn-dark fs-13 fw-medium"><i class="ti ti-clock-plus me-1"></i>Assign Worker</a>
+                        {% if po.invoice %}
+                            <!-- Show View Invoice button if invoice exists -->
+                            <a href="{% url 'managementSystem:view_invoice' po.invoice.id %}" class="btn btn-md btn-success fs-13 fw-medium">
+                                View Invoice
+                            </a>
+                        {% else %}
+                            <!-- Show Generate Invoice button if no invoice exists -->
+                            <form method="post" action="{% url 'managementSystem:generate_invoice' po.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-md btn-dark fs-13 fw-medium">
+                                    Generate Invoice
+                                </button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -159,6 +172,7 @@
                                         <th>Order Item</th>
                                         <th>Workers</th>
                                         <th>Role</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -176,6 +190,9 @@
                                                         <td> <a href="{% url 'workers:worker_profile' worker.id %}">{{ worker.name }}</a></td>
                                                         <td>{{ worker.role }}</td>
                                                         {% if forloop.first %}
+                                                            <td rowspan="{{ task.workers.count }}">
+                                                                {{task.order_item.status}}
+                                                            </td>
                                                             <td rowspan="{{ task.workers.count }}">
                                                                 <a href="{% url 'managementSystem:edit_task_assignment' task.id %}"><i class="ti ti-edit me-2"></i>Edit</a>
                                                             </td>
