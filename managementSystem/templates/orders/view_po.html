@@ -202,13 +202,13 @@
                                             {% else %}
                                                 <tr>
                                                     <td>{{ task.order_item.description }}</td>
-                                                    <td colspan="3">No workers assigned</td>
+                                                    <td colspan="3" style="text-align: center;">No workers assigned</td>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
                                     {% else %}
                                         <tr>
-                                            <td colspan="4">No tasks found</td>
+                                            <td colspan="5" style="text-align: center;">No tasks found</td>
                                         </tr>
                                     {% endif %}
                                 </tbody>

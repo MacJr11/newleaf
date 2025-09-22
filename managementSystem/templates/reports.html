@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4">Purchase Order Reports</h2>
+
+    <!-- Buttons -->
+    <div class="btn-group mb-4" role="group">
+        <button class="btn btn-outline-primary" onclick="showTab('daily')">Daily</button>
+        <button class="btn btn-outline-primary" onclick="showTab('weekly')">Weekly</button>
+        <button class="btn btn-outline-primary" onclick="showTab('monthly')">Monthly</button>
+        <button class="btn btn-outline-primary" onclick="showTab('yearly')">Yearly</button>
+    </div>
+
+    <!-- DAILY -->
+    <div id="daily" class="report-tab {% if active_tab == 'daily' %}d-block{% else %}d-none{% endif %}">
+        <h4>Daily Report ({{ today }})</h4>
+        <form method="get" class="mb-3">
+            <input type="hidden" name="view_type" value="daily">
+            <input type="date" name="day" value="{{ request.GET.day }}">
+            <button type="submit" class="btn btn-sm btn-primary">Search</button>
+        </form>
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>PO Number</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in daily_orders %}
+                <tr>
+                    <td><a href="{% url 'managementSystem:view_po' order.id %}" class="text-primary">{{ order.po_number }}</a></td>
+                    <td>{{ order.client }}</td>
+                    <td>{{ order.date }}</td>
+                    <td>{{ order.status }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No orders found</td></tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3">Total Orders</th>
+                    <th>{{ daily_orders.count }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- WEEKLY -->
+    <div id="weekly" class="report-tab {% if active_tab == 'weekly' %}d-block{% else %}d-none{% endif %}">
+        <h4>Weekly Report{% if start_of_week and end_of_week %} ({{ start_of_week }} – {{ end_of_week }}){% endif %}</h4>
+
+        <form method="get" class="mb-3">
+            <input type="hidden" name="view_type" value="weekly">
+            <label class="form-label me-2">Pick a date in the week:</label>
+            <input type="date" name="week_day" value="{{ request.GET.week_day|default:today|date:'Y-m-d' }}">
+            <button type="submit" class="btn btn-sm btn-primary ms-2">Search</button>
+        </form>
+
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>PO Number</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in weekly_orders %}
+                <tr>
+                    <td><a href="{% url 'managementSystem:view_po' order.id %}" class="text-primary">{{ order.po_number }}</a></td>
+                    <td>{{ order.client }}</td>
+                    <td>{{ order.date }}</td>
+                    <td>{{ order.status }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No orders found</td></tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3">Total Orders</th>
+                    <th>{{ weekly_orders.count }}</th>
+                </tr>
+                <tr>
+                    <th colspan="3">Total Value</th>
+                    <th>{{ weekly_total_value }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+
+    <!-- MONTHLY -->
+    <div id="monthly" class="report-tab {% if active_tab == 'monthly' %}d-block{% else %}d-none{% endif %}">
+        <h4>Monthly Report ({{ current_month }}/{{ current_year }})</h4>
+        <form method="get" class="mb-3">
+            <input type="hidden" name="view_type" value="monthly">
+            <input type="month" name="month" value="{{ request.GET.month }}">
+            <input type="number" name="year" value="{{ request.GET.year|default:current_year }}" min="2000" max="2100">
+            <button type="submit" class="btn btn-sm btn-primary">Search</button>
+        </form>
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>PO Number</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in monthly_orders %}
+                <tr>
+                    <td><a href="{% url 'managementSystem:view_po' order.id %}" class="text-primary">{{ order.po_number }}</a></td>
+                    <td>{{ order.client }}</td>
+                    <td>{{ order.date }}</td>
+                    <td>{{ order.status }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No orders found</td></tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3">Total Orders</th>
+                    <th>{{ monthly_orders.count }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- YEARLY -->
+    <div id="yearly" class="report-tab {% if active_tab == 'yearly' %}d-block{% else %}d-none{% endif %}">
+        <h4>Yearly Report ({{ current_year }})</h4>
+        <form method="get" class="mb-3">
+            <input type="hidden" name="view_type" value="yearly">
+            <input type="number" name="year" value="{{ request.GET.year|default:current_year }}" min="2000" max="2100">
+            <button type="submit" class="btn btn-sm btn-primary">Search</button>
+        </form>
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>PO Number</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in yearly_orders %}
+                <tr>
+                    <td><a href="{% url 'managementSystem:view_po' order.id %}" class="text-primary">{{ order.po_number }}</a></td>
+                    <td>{{ order.client }}</td>
+                    <td>{{ order.date }}</td>
+                    <td>{{ order.status }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No orders found</td></tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3">Total Orders</th>
+                    <th>{{ yearly_orders.count }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script>
+    function showTab(tab) {
+        document.querySelectorAll('.report-tab').forEach(div => div.classList.add('d-none'));
+        document.getElementById(tab).classList.remove('d-none');
+    }
+</script>
+{% endblock %}

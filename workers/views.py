@@ -137,7 +137,7 @@ def worker_profile(request, worker_id):
         if task.is_group_task:
             worker_share = (task.price_per_task * task.order_item.quantity) / task.workers.count() if task.workers.count() > 0 else 0
         else:
-            worker_share = task.price_per_task
+            worker_share = task.price_per_task * task.order_item.quantity
         total_earnings += worker_share
     
     total_paid = worker.payments.aggregate(s=Sum("amount"))["s"] or Decimal("0.00")

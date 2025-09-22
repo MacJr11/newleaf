@@ -5,11 +5,14 @@ from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.urls import reverse
-from django.db.models import Sum, F, FloatField
+from django.db.models import Sum, F, FloatField, ExpressionWrapper, DecimalField
 from django.db.models import Count
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models.functions import TruncWeek, TruncMonth, TruncYear, TruncDay
+from django.utils.timezone import now
+from datetime import date, timedelta, datetime
 
 
 def register_client(request):
@@ -97,7 +100,9 @@ def po_search(request):
     if query:
         orders = orders.filter(
             Q(po_number__icontains=query) |
-            Q(status__icontains=query) 
+            Q(status__icontains=query) |
+            Q(date__icontains=query) |
+            Q(date__icontains=query)
         )
 
     results = [{
@@ -335,11 +340,14 @@ def edit_task_assignment(request, task_id):
     task = get_object_or_404(TaskAssignment, id=task_id)
     workers = Worker.objects.filter(is_active=True)
 
+    orderItem = get_object_or_404(OrderItem, id=task.order_item.id)
+
     if request.method == "POST":
         selected_workers = request.POST.getlist("workers")
         deadline = request.POST.get("deadline")
         is_group_task = request.POST.get("is_group_task") == "on"
         price_per_task = request.POST.get("price_per_task")
+        status = request.POST.get("status")
 
         # Rules
         if len(selected_workers) == 1 and is_group_task:
@@ -352,6 +360,9 @@ def edit_task_assignment(request, task_id):
         task.price_per_task = price_per_task
         task.workers.set(selected_workers)
         task.save()
+
+        orderItem.status = status
+        orderItem.save()
 
         return JsonResponse({"success": True, "message": "Task assignment updated successfully!"})
 
@@ -410,3 +421,70 @@ def mark_invoice_paid(request, invoice_id):
     invoice.status = "Paid"
     invoice.save()
     return redirect("managementSystem:view_invoice", invoice_id=invoice.id)
+
+def reports_view(request):
+    today = now().date()
+    view_type = request.GET.get("view_type", "daily")  # default = daily
+
+    # Daily
+    day = request.GET.get("day")
+    if view_type == "daily":
+        daily_orders = PurchaseOrder.objects.filter(date=day if day else today)
+    else:
+        daily_orders = []
+
+    # Weekly
+    if view_type == "weekly":
+        week_day_str = request.GET.get("week_day")  # e.g. "2025-08-13"
+        ref_date = datetime.strptime(week_day_str, "%Y-%m-%d").date() if week_day_str else today
+
+        start_of_week = ref_date - timedelta(days=ref_date.weekday())  # Monday
+        end_of_week = start_of_week + timedelta(days=6)                # Sunday
+
+        weekly_orders = PurchaseOrder.objects.filter(date__range=[start_of_week, end_of_week])
+
+        # optional: total value for the week (sum of all order items)
+        val_expr = ExpressionWrapper(F("items__quantity") * F("items__unit_price"),
+                                     output_field=DecimalField(max_digits=12, decimal_places=2))
+        weekly_total_value = weekly_orders.aggregate(total=Sum(val_expr))["total"] or 0
+    else:
+        weekly_orders = PurchaseOrder.objects.none()
+        start_of_week = end_of_week = None
+        weekly_total_value = 0
+
+
+    # Monthly
+    month_str = request.GET.get("month")
+    if view_type == "monthly":
+        if month_str:
+            year, month = month_str.split("-")
+            monthly_orders = PurchaseOrder.objects.filter(date__year=int(year), date__month=int(month))
+            current_month, current_year = int(month), int(year)
+        else:
+            monthly_orders = PurchaseOrder.objects.filter(date__year=today.year, date__month=today.month)
+            current_month, current_year = today.month, today.year
+    else:
+        monthly_orders, current_month, current_year = [], today.month, today.year
+
+    # Yearly
+    year = request.GET.get("year")
+    if view_type == "yearly":
+        yearly_orders = PurchaseOrder.objects.filter(date__year=int(year)) if year else PurchaseOrder.objects.filter(date__year=today.year)
+        current_year = int(year) if year else today.year
+    else:
+        yearly_orders, current_year = [], today.year
+
+    return render(request, "reports.html", {
+        "today": today,
+        "daily_orders": daily_orders,
+        "weekly_orders": weekly_orders,
+        "monthly_orders": monthly_orders,
+        "yearly_orders": yearly_orders,
+        "current_month": current_month,
+        "current_year": current_year,
+        "active_tab": view_type,
+        "weekly_total_value": weekly_total_value,
+        "start_of_week": start_of_week,
+        "end_of_week": end_of_week,
+        "weekly_total_value": weekly_total_value,
+    })
