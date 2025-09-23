@@ -548,15 +548,18 @@ if ($('#chartDonut').length > 0) {
 	}
 
 	if($('#tasks').length > 0) {
-		var ctx = document.getElementById('tasks').getContext('2d');
-    var mySemiDonutChart = new Chart(ctx, {
+				var ctx = document.getElementById('tasks').getContext('2d');
+				const inprogressPercent = parseFloat($('#tasks').data('inprogress'));
+				const pendingPercent = parseFloat($('#tasks').data('pending'));
+				const completedPercent = parseFloat($('#tasks').data('completed'));
+        var mySemiDonutChart = new Chart(ctx, {
         type: 'doughnut', // Chart type
         data: {
-            labels: ['Ongoing','Completed', 'Overdue', 'On Hold '],
+            labels: ['In progress','Pending', 'Completed'],
             datasets: [{
                 label: 'Tasks',
-                data: [20, 40, 20, 20],
-                backgroundColor: ['#FE9738', '#8000FF', '#01B664', '#FF0000'],
+                data: [ inprogressPercent, pendingPercent, completedPercent],
+                backgroundColor: ['#FE9738', '#8000FF', '#01B664'],
                 borderWidth: 10,
 				borderRadius: 0,
                 borderColor: '#F3F4F6', // Border between segments

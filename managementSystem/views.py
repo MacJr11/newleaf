@@ -82,7 +82,7 @@ def orders(request):
 
     total_orders = orders.count()
     completed_orders = orders.filter(status="Completed").count()
-    inprogress_orders = orders.filter(status="In Progress").count()
+    inprogress_orders = orders.filter(status="In progress").count()
     pending_orders = orders.filter(status="Pending").count()
     return render(request, 'orders/orders.html',{
         'orders': orders,

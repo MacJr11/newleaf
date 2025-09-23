@@ -22727,6 +22727,7 @@ body.layout-mode-rtl .nav-list::before {
   44. theme-settings
 ============================*/
 .sidebar-contact {
+  display: none;
   position: fixed;
   top: 0%;
   right: -350px;
