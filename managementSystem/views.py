@@ -13,6 +13,14 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.functions import TruncWeek, TruncMonth, TruncYear, TruncDay
 from django.utils.timezone import now
 from datetime import date, timedelta, datetime
+from django.http import HttpResponse
+from django.conf import settings
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+import google.auth.transport.requests
+import io
+import os
 
 
 def register_client(request):
@@ -488,3 +496,68 @@ def reports_view(request):
         "end_of_week": end_of_week,
         "weekly_total_value": weekly_total_value,
     })
+
+SCOPES = ['https://www.googleapis.com/auth/drive.file']
+CLIENT_SECRET_FILE = os.path.join(os.path.dirname(__file__), 'credentials.json')
+REDIRECT_URI = "http://127.0.0.1:8000/management/oauth2callback/"
+
+FOLDER_NAME = "newleaf_backups"
+
+def start_backup(request):
+    """Step 1: Redirect user to Google consent screen"""
+    flow = Flow.from_client_secrets_file(
+        CLIENT_SECRET_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI
+    )
+    auth_url, state = flow.authorization_url(
+        access_type='offline', include_granted_scopes='true', prompt='consent'
+    )
+    request.session['state'] = state
+    return redirect(auth_url)
+
+
+def oauth2callback(request):
+    """Step 2: Handle Google redirect and upload DB file into folder"""
+    state = request.session.get('state')
+
+    flow = Flow.from_client_secrets_file(
+        CLIENT_SECRET_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI, state=state
+    )
+
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    creds = flow.credentials
+    service = build('drive', 'v3', credentials=creds)
+
+    # --- Step 1: Check if backup folder exists ---
+    query = f"mimeType='application/vnd.google-apps.folder' and name='{FOLDER_NAME}' and trashed=false"
+    results = service.files().list(q=query, fields="files(id, name)").execute()
+    items = results.get('files', [])
+
+    if items:
+        folder_id = items[0]['id']
+    else:
+        file_metadata = {
+            'name': FOLDER_NAME,
+            'mimeType': 'application/vnd.google-apps.folder'
+        }
+        folder = service.files().create(body=file_metadata, fields='id').execute()
+        folder_id = folder.get('id')
+
+    # --- Step 2: Upload DB file into that folder ---
+    file_metadata = {
+        'name': 'db-backup.sqlite3',
+        'parents': [folder_id]
+    }
+    media = MediaFileUpload('db.sqlite3', mimetype='application/x-sqlite3')
+    uploaded = service.files().create(
+        body=file_metadata,
+        media_body=media,
+        fields='id'
+    ).execute()
+
+    # Success message
+    messages.success(
+        request,
+        f"✅ Backup successfully uploaded to Google Drive folder '{FOLDER_NAME}'."
+    )
+
+    return redirect("dashboard:dashboard")

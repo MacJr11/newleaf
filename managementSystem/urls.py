@@ -20,4 +20,6 @@ urlpatterns = [
     path("invoice/<int:invoice_id>/mark-paid/", views.mark_invoice_paid, name="mark_invoice_paid"),
     path("purchase-order/<int:po_id>/generate-invoice/", views.generate_invoice, name="generate_invoice"),
     path("reports/", views.reports_view, name="reports_view"),
+    path("backup/", views.start_backup, name="backup"),
+    path("oauth2callback/", views.oauth2callback, name="oauth2callback"),
 ]

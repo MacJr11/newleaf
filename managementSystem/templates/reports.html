@@ -17,9 +17,9 @@
     <div id="daily" class="report-tab {% if active_tab == 'daily' %}d-block{% else %}d-none{% endif %}">
         <h4>Daily Report ({{ today }})</h4>
         <form method="get" class="mb-3">
-            <input type="hidden" name="view_type" value="daily">
-            <input type="date" name="day" value="{{ request.GET.day }}">
-            <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            <input type="hidden" name="view_type" value="daily" class="form-control my-2" style="width: 60%;">
+            <input type="date" name="day" value="{{ request.GET.day }}" class="form-control my-2" style="width: 60%;">
+            <button type="submit" class="btn btn-sm btn-primary form-control" style="width: 60%;">Search</button>
         </form>
         <table class="table table-bordered">
             <thead class="table-light">
@@ -56,10 +56,10 @@
         <h4>Weekly Report{% if start_of_week and end_of_week %} ({{ start_of_week }} – {{ end_of_week }}){% endif %}</h4>
 
         <form method="get" class="mb-3">
-            <input type="hidden" name="view_type" value="weekly">
+            <input type="hidden" name="view_type" value="weekly" class="form-control my-2" style="width: 60%;">
             <label class="form-label me-2">Pick a date in the week:</label>
-            <input type="date" name="week_day" value="{{ request.GET.week_day|default:today|date:'Y-m-d' }}">
-            <button type="submit" class="btn btn-sm btn-primary ms-2">Search</button>
+            <input type="date" name="week_day" value="{{ request.GET.week_day|default:today|date:'Y-m-d' }}" class="form-control my-2" style="width: 60%;">
+            <button type="submit" class="btn btn-sm btn-primary form-control" style="width: 60%;">Search</button>
         </form>
 
         <table class="table table-bordered">
@@ -102,9 +102,9 @@
         <h4>Monthly Report ({{ current_month }}/{{ current_year }})</h4>
         <form method="get" class="mb-3">
             <input type="hidden" name="view_type" value="monthly">
-            <input type="month" name="month" value="{{ request.GET.month }}">
-            <input type="number" name="year" value="{{ request.GET.year|default:current_year }}" min="2000" max="2100">
-            <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            <input type="month" name="month" value="{{ request.GET.month }}" class="form-control" style="width: 60%;">
+            <input type="number" name="year" value="{{ request.GET.year|default:current_year }}" min="2000" max="2100" class="form-control my-2" style="width: 60%;">
+            <button type="submit" class="btn btn-sm btn-primary form-control" style="width: 60%;">Search</button>
         </form>
         <table class="table table-bordered">
             <thead class="table-light">
@@ -141,8 +141,8 @@
         <h4>Yearly Report ({{ current_year }})</h4>
         <form method="get" class="mb-3">
             <input type="hidden" name="view_type" value="yearly">
-            <input type="number" name="year" value="{{ request.GET.year|default:current_year }}" min="2000" max="2100">
-            <button type="submit" class="btn btn-sm btn-primary">Search</button>
+            <input type="number" name="year" value="{{ request.GET.year|default:current_year }}" min="2000" max="2100"  class="form-control my-2" style="width: 60%;">
+            <button type="submit" class="btn btn-sm btn-primary form-control" style="width: 60%;">Search</button>
         </form>
         <table class="table table-bordered">
             <thead class="table-light">
@@ -181,4 +181,34 @@
         document.getElementById(tab).classList.remove('d-none');
     }
 </script>
+
+
+
+<!-- Theme Script js -->
+    <script src="{% static 'js/theme-script.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="{% static 'js/jquery.slimscroll.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Datatable JS -->
+    <script src="{% static 'js/jquery.dataTables.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+    <script src="{% static 'js/dataTables.bootstrap5.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Select2 JS -->
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Daterangepikcer JS -->
+    <script src="{% static 'js/moment.min.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+    <script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/script.js' %}" type="85548e56bad66eee12a166ed-text/javascript"></script>
+
+    <script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="85548e56bad66eee12a166ed-|49" defer=""></script>
 {% endblock %}

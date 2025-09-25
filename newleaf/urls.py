@@ -24,7 +24,7 @@ urlpatterns = [
    path('admin/', admin.site.urls),
     path('', RedirectView.as_view(pattern_name='login', permanent=False)),
     path('users/', include('users.urls')),
-    path('dashboard/', include('dashboard.urls')),
+    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('workers/', include('workers.urls', namespace='workers')),
     path('management/', include('managementSystem.urls', namespace='managementSystem')),
 ]
