@@ -51,7 +51,7 @@
                 <div class="main-header">
 
                     <div class="header-left">
-                        <a href="{% url 'dashboard:dashboard' %}" class="logo">
+                        <a href="{% url 'dashboard:dashboard' %}" class="logo" style="width: 100px;">
                             <img src=" {% static 'img/nlogo.png' %} " alt="Logo">
                         </a>
                         <a href="{% url 'dashboard:dashboard' %}" class="dark-logo">
@@ -141,6 +141,9 @@
                                             {% endfor %}
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item text-center" href="{% url 'managementSystem:notifications_list' %}">View All</a></li>
+                                            <div class="dropdown-footer text-center">
+                                                <button id="markAllRead" class="btn btn-sm btn-primary" style="width: 100%;">Mark all as read</button>
+                                            </div>
                                         {% else %}
                                             <li class="dropdown-item text-center text-muted">No notifications</li>
                                         {% endif %}
@@ -185,6 +188,32 @@
                                 <i class="ti ti-logout me-2"></i>Signout
                             </a>
                         </div>
+                    <div class="dropdown mobile-user-menu nav-link" style="margin-right: 40px; margin-top: 5px;">
+                        <a class="nav-link" href="#" id="notificationDropdown" data-bs-toggle="dropdown">
+                            <i class="ti ti-bell" style="font-size:25px;"></i>
+                            {% if unread_notifications > 0 %}
+                                <span class="" style="font-size: 15px; font-weight: bolder; position: absolute; top: 0; color: red;">{{ unread_notifications }}</span>
+                            {% endif %}
+                        </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                            {% if navbar_notifications %}
+                                {% for note in navbar_notifications %}
+                                    <li class="dropdown-item {% if not note.is_read %}fw-bold{% endif %}">
+                                        {{ note.message }}
+                                        <br>
+                                        <small class="text-muted">{{ note.created_at|date:"M d, H:i" }}</small>
+                                    </li>
+                                {% endfor %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-center" href="{% url 'managementSystem:notifications_list' %}">View All</a></li>
+                                <div class="dropdown-footer text-center">
+                                    <button id="markAllRead" class="btn btn-sm btn-primary" style="width:100%;">Mark all as read</button>
+                                </div>
+                            {% else %}
+                                <li class="dropdown-item text-center text-muted">No notifications</li>
+                            {% endif %}
+                        </ul>
                     </div>
                     <!-- /Mobile Menu -->
 
@@ -233,58 +262,7 @@
                         <span class="btn btn-md btn-time px-2 d-inline-flex align-items-center fs-12 bg-primary-100 text-primary">
                             <i class="ti ti-clock me-1"></i><a href="{% url 'logout' %}">Logout</a>
                         </span>
-                    </div>
-                    <div class="input-group input-group-flat d-inline-flex me-2 mb-3">
-                        <span class="input-icon-addon">
-                            <i class="ti ti-search"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Search">
-                        <span class="input-group-text">
-                            <kbd class="bg-gray-100 px-2">CTRL + / </kbd>
-                        </span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <!-- Flag -->
-                        <div class="nav-item dropdown has-arrow flag-nav nav-item-box me-2">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">
-                                <img src="assets/img/flags/us.svg" alt="Language" class="img-fluid">
-                            </a>
-                            <ul class="dropdown-menu p-2">
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <img src="assets/img/flags/us.svg" alt="" height="16">English
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <img src="assets/img/flags/de.svg" alt="">German
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <img src="assets/img/flags/fr.svg" alt="">French
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <img src="assets/img/flags/ae.svg" alt="">Arabic
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- /Flag -->
-
-                        <div class="me-2 notification_item">
-                            <a href="notifications.html" class="btn btn-menubar position-relative me-1">
-                                <i class="ti ti-bell-check"></i>
-                            </a>
-                        </div>
-                        <div class="me-2">
-                            <a href="profile-settings.html" class="btn btn-menubar">
-                                <i class="ti ti-settings"></i>
-                            </a>
-                        </div>
-                    </div>
+                    </div>                    
                 </div>
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -359,7 +337,35 @@
             }
             setInterval(updateClock, 1000); // update every second
             updateClock(); // run immediately
+
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const markAllBtn = document.getElementById("markAllRead");
+                if (markAllBtn) {
+                    markAllBtn.addEventListener("click", function () {
+                        fetch("{% url 'managementSystem:mark_all_notifications_read' %}", {
+                            method: "POST",
+                            headers: {
+                                "X-CSRFToken": "{{ csrf_token }}",
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Clear unread count badge
+                                document.getElementById("notification-count").innerText = "0";
+                                // Optionally update styles
+                                document.querySelectorAll(".notification-item").forEach(item => {
+                                    item.classList.remove("unread");
+                                });
+                            }
+                        });
+                    });
+                }
+            });
         </script>
+
 
     
     

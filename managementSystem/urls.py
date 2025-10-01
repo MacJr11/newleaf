@@ -26,4 +26,5 @@ urlpatterns = [
     path('restore/', views.restore, name='restore'),
     path('oauth2callback/restore/', views.oauth2callback_restore, name='oauth2callback_restore'),
     path("notifications/", views.notifications_list, name="notifications_list"),
+    path("notifications/mark-read/", views.mark_all_notifications_read, name="mark_all_notifications_read"),
 ]

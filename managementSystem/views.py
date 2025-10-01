@@ -616,3 +616,10 @@ def oauth2callback_restore(request):
 def notifications_list(request):
     notifications = Notification.objects.filter(user=request.user)
     return render(request, "notification.html", {"notifications": notifications})
+
+@login_required
+def mark_all_notifications_read(request):
+    if request.method == "POST":
+        Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False}, status=400)
