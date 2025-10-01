@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, PurchaseOrder, OrderItem, TaskAssignment
+from .models import Client, PurchaseOrder, OrderItem, TaskAssignment, Notification
 
 
 class OrderItemInline(admin.TabularInline):
@@ -33,3 +33,8 @@ class TaskAssignmentAdmin(admin.ModelAdmin):
     list_display = ('order_item', 'deadline', 'is_group_task', 'price_per_task', 'status')
     filter_horizontal = ('workers',)
     list_filter = ('status', 'is_group_task')
+
+@admin.register(Notification)
+class Notification(admin.ModelAdmin):
+    list_display = ('user', 'title', 'message', 'created_at', 'is_read')
+    list_filter = ('created_at', 'is_read')

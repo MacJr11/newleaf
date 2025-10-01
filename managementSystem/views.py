@@ -19,9 +19,12 @@ from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 import google.auth.transport.requests
+from googleapiclient.http import MediaIoBaseDownload
 import io
 import os
-
+from io import BytesIO
+import os, shutil
+from managementSystem.utils import notify
 
 def register_client(request):
     if request.method == 'POST':
@@ -146,6 +149,8 @@ def create_order(request):
                 status=status
             )
 
+            notify(request.user, "Purchase Order Created", f"Purchase Order #{po_number} was created successfully.")
+
             return JsonResponse({'success': True, 'message': 'Purchase Order added successfully!'})
 
         except Exception as e:
@@ -177,6 +182,12 @@ def edit_po(request, po_id):
         'po': order
     })
 
+def delete_po(request, po_id):
+    item = get_object_or_404(PurchaseOrder, id=po_id)
+    item.delete()
+    notify(request.user, "Order Deleted", f"#{po_id} has been deleted successfully")
+    return JsonResponse({"success": True, "message": "order is deleted successfully!"})
+
 def add_order_item(request, po_id):
     po = get_object_or_404(PurchaseOrder, id=po_id)
     if request.method == 'POST':
@@ -190,6 +201,8 @@ def add_order_item(request, po_id):
             quantity=quantity,
             unit_price=unit_price
         )
+
+        notify(request.user, " A new Order Item added", f"Order item has been added to Purchase Order #{po.po_number}.")
 
         return redirect(reverse('managementSystem:view_po', args=[po.id]))
 
@@ -499,33 +512,30 @@ def reports_view(request):
 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 CLIENT_SECRET_FILE = os.path.join(os.path.dirname(__file__), 'credentials.json')
-REDIRECT_URI = "http://127.0.0.1:8000/management/oauth2callback/"
+
+REDIRECT_URI_BACKUP = "http://127.0.0.1:8000/management/oauth2callback/backup/"
+REDIRECT_URI_RESTORE = "http://127.0.0.1:8000/management/oauth2callback/restore/"
+
 
 FOLDER_NAME = "newleaf_backups"
 
 def start_backup(request):
-    """Step 1: Redirect user to Google consent screen"""
     flow = Flow.from_client_secrets_file(
-        CLIENT_SECRET_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI
+        CLIENT_SECRET_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI_BACKUP
     )
-    auth_url, state = flow.authorization_url(
-        access_type='offline', include_granted_scopes='true', prompt='consent'
+    auth_url, _ = flow.authorization_url(
+        access_type="offline", include_granted_scopes="true", prompt="consent"
     )
-    request.session['state'] = state
     return redirect(auth_url)
 
 
 def oauth2callback(request):
-    """Step 2: Handle Google redirect and upload DB file into folder"""
-    state = request.session.get('state')
-
     flow = Flow.from_client_secrets_file(
-        CLIENT_SECRET_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI, state=state
+        CLIENT_SECRET_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI_BACKUP
     )
-
     flow.fetch_token(authorization_response=request.build_absolute_uri())
     creds = flow.credentials
-    service = build('drive', 'v3', credentials=creds)
+    service = build("drive", "v3", credentials=creds)
 
     # --- Step 1: Check if backup folder exists ---
     query = f"mimeType='application/vnd.google-apps.folder' and name='{FOLDER_NAME}' and trashed=false"
@@ -561,3 +571,48 @@ def oauth2callback(request):
     )
 
     return redirect("dashboard:dashboard")
+
+def restore(request):
+    flow = Flow.from_client_secrets_file(
+        CLIENT_SECRET_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI_RESTORE
+    )
+    auth_url, _ = flow.authorization_url(
+        access_type="offline", include_granted_scopes="true", prompt="consent"
+    )
+    return redirect(auth_url)
+
+def oauth2callback_restore(request):
+    flow = Flow.from_client_secrets_file(
+        CLIENT_SECRET_FILE, scopes=SCOPES, redirect_uri=REDIRECT_URI_RESTORE
+    )
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    creds = flow.credentials
+    service = build("drive", "v3", credentials=creds)
+
+    # Example: download latest backup file
+    results = service.files().list(
+        q="name='db-backup.sqlite3'", orderBy="createdTime desc", pageSize=1
+    ).execute()
+    items = results.get("files", [])
+    if not items:
+        messages.error(request, "❌ No backup found in Google Drive.")
+    else:
+        file_id = items[0]["id"]
+        request_file = service.files().get_media(fileId=file_id)
+        with open("db_restored.sqlite3", "wb") as f:
+            downloader = MediaIoBaseDownload(f, request_file)
+            done = False
+            while not done:
+                status, done = downloader.next_chunk()
+
+            db_path = os.path.join(os.getcwd(), "db.sqlite3")
+            shutil.copy("db_restored.sqlite3", db_path)
+
+        messages.success(request, "✅ Database restored successfully.")
+
+    return redirect("dashboard:dashboard")
+
+
+def notifications_list(request):
+    notifications = Notification.objects.filter(user=request.user)
+    return render(request, "notification.html", {"notifications": notifications})

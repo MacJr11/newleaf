@@ -9,6 +9,7 @@ urlpatterns = [
     path('purchase_orders/', views.orders, name='orders'),
     path('add_purchase_orders/', views.create_order, name='create_order'),
     path('edit_purchase_orders/<int:po_id>/', views.edit_po, name='edit_po'),
+    path('delete_purchase_orders/<int:po_id>/', views.delete_po, name='delete_po'),
     path('purchase-order/<int:po_id>/', views.view_po, name='view_po'),
     path('purchase-order/<int:po_id>/add-item/', views.add_order_item, name='add_order_item'),
     path('po/<int:po_id>/assign-workers/', views.assign_workers, name='assign_workers'),
@@ -21,5 +22,8 @@ urlpatterns = [
     path("purchase-order/<int:po_id>/generate-invoice/", views.generate_invoice, name="generate_invoice"),
     path("reports/", views.reports_view, name="reports_view"),
     path("backup/", views.start_backup, name="backup"),
-    path("oauth2callback/", views.oauth2callback, name="oauth2callback"),
+    path("oauth2callback/backup/", views.oauth2callback, name="oauth2callback"),
+    path('restore/', views.restore, name='restore'),
+    path('oauth2callback/restore/', views.oauth2callback_restore, name='oauth2callback_restore'),
+    path("notifications/", views.notifications_list, name="notifications_list"),
 ]

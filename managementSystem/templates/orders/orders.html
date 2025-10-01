@@ -149,7 +149,10 @@
                                             <a href="{% url 'managementSystem:view_po' order.id %}" class="dropdown-item rounded-2"><i class="ti ti-eye me-2 text-gray-5"></i>View Details</a>
                                         </li>
                                         <li>
-                                            <a href="{% url 'managementSystem:edit_po' order.id %}" class="dropdown-item rounded-2"><i class="ti ti-edit me-2 text-gray-5"></i>Edit Project</a>
+                                            <a href="{% url 'managementSystem:edit_po' order.id %}" class="dropdown-item rounded-2"><i class="ti ti-edit me-2 text-gray-5"></i>Edit Purchase Order</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="deleteItem({{ order.id }})" class="dropdown-item rounded-2"><i class="ti ti-cancel me-2 text-gray-5"></i>Delete</a>
                                         </li>
                                     </ul>
                                 </td>
@@ -257,6 +260,25 @@
         }
         return cookieValue;
     }
+</script>
+
+<script>
+        async function deleteItem(itemId) {
+            if (!confirm("Are you sure you want to delete this item?")) return;
+
+            const response = await fetch(`/management/delete_purchase_orders/${itemId}/`, {
+                method: "POST",
+                headers: { "X-CSRFToken": "{{ csrf_token }}" }
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert("Error deleting item!");
+            }
+        }
 </script>
 
 

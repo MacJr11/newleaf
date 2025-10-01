@@ -123,175 +123,30 @@
                                     </ul>
                                 </div> -->
                                 <div class="me-2 notification_item">
-                                    <a href="#" class="btn btn-menubar position-relative me-1" id="notification_popup" data-bs-toggle="dropdown" data-bs-auto-close="outside">
-                                        <i class="ti ti-bell-check"></i>
-                                        <span class="position-absolute badge bg-danger"></span>
+                                    <a class="nav-link" href="#" id="notificationDropdown" data-bs-toggle="dropdown">
+                                        <i class="ti ti-bell" style="font-size: 25px;"></i>
+                                        {% if unread_notifications > 0 %}
+                                            <span class="" style="font-size: 15px; font-weight: bolder; position: absolute; top: 0; color: red;">{{ unread_notifications }}</span>
+                                        {% endif %}
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-end notification-dropdown">
-                                        <div class="topnav-dropdown-header pb-0">
-                                            <h5 class="notification-title">Notifications</h5>
-                                            <ul class="nav nav-tabs nav-tabs-bottom">
-                                                <li class="nav-item"><a class="nav-link active" href="#active-notification" data-bs-toggle="tab">Active<span class="count ms-2">2</span></a></li>
-                                                <li class="nav-item"><a class="nav-link" href="#unread-notification" data-bs-toggle="tab">Unread</a></li>
-                                                <li class="nav-item"><a class="nav-link" href="#archieve-notification" data-bs-toggle="tab">Archive</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="noti-content">
-                                            <div class="tab-content">
-                                                <div class="tab-pane fade show active" id="active-notification">
-                                                    <div class="notification-nodata">
-                                                        <img src="assets/img/icons/notify-nodata.svg" alt="img">
-                                                        <p class="fw-medium">No New Nofitications</p>
-                                                    </div>
-                                                    <div class="notification-list">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="notifications.html" class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-02.jpg" alt="Profile" class="rounded-circle">
-                                                            </a>
-                                                            <div class="flex-grow-1">
-                                                                <p class="mb-1"><a href="notifications.html"><span class="h6">Jerry Manas</span> Added New Task Creating <span class="h6">Login Pages</span></a></p>
-                                                                <span class="fs-12 noti-time"><i class="ti ti-clock me-1"></i>4 Min Ago</span>
-                                                            </div>
-                                                        </div>
-                                                        <span class="bg-danger badge p-0 d-inline-block badge-status"></span>
-                                                    </div>
-                                                    <div class="notification-list">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="notifications.html" class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-05.jpg" alt="Profile" class="rounded-circle">
-                                                            </a>
-                                                            <div class="flex-grow-1">
-                                                                <p class="mb-1"><a href="notifications.html"><span class="h6">Robert Fox </span> Was Marked as Late Login <span class="text-danger">09:55 AM</span></a></p>
-                                                                <span class="fs-12 noti-time"><i class="ti ti-clock me-1"></i>5 Min Ago</span>
-                                                            </div>
-                                                        </div>
-                                                        <span class="bg-danger badge p-0 d-inline-block badge-status"></span>
-                                                    </div>
-                                                    <div class="notification-list">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="notifications.html" class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-04.jpg" alt="Profile" class="rounded-circle">
-                                                            </a>
-                                                            <div class="flex-grow-1">
-                                                                <p class="mb-1"><a href="notifications.html"><span class="h6">Jenny Wilson </span> Completed <span class="h6">Created New Component</span></a></p>
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="fs-12 noti-time"><i class="ti ti-clock me-1"></i>15 Min Ago</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-list">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="notifications.html" class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-02.jpg" alt="Profile" class="rounded-circle">
-                                                            </a>
-                                                            <div class="flex-grow-1">
-                                                                <p class="mb-1"><a href="notifications.html"><span class="h6">Jacob Johnson </span> Added Manual Time <span class="h6">2 Hrs</span></a></p>
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="fs-12 noti-time"><i class="ti ti-clock me-1"></i>20 Min Ago</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-list">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="notifications.html" class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-01.jpg" alt="Profile" class="rounded-circle">
-                                                            </a>
-                                                            <div class="flex-grow-1">
-                                                                <p class="mb-1"><a href="notifications.html"><span class="h6">Annete Black </span> Completed <span class="h6">Improved Workflow React</span></a></p>
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="fs-12 noti-time"><i class="ti ti-clock me-1"></i>22 Min Ago</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="unread-notification">
-                                                    <div class="notification-list">
-                                                        <a href="notifications.html">
-                                                            <div class="d-flex align-items-center">
-                                                                <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-02.jpg" alt="Profile" class="rounded-circle">
-                                                                </span>
-                                                                <div class="flex-grow-1">
-                                                                    <p class="mb-1"><span class="h6">Jerry Manas</span> Added New Task Creating <span class="h6">Login Pages</span></p>
-                                                                    <span class="fs-12 noti-time"><i class="ti ti-clock me-1"></i>4 Min Ago</span>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                        <span class="bg-danger badge p-0 d-inline-block badge-status"></span>
-                                                    </div>
-                                                    <div class="notification-list">
-                                                        <a href="notifications.html">
-                                                            <div class="d-flex align-items-center">
-                                                                <span class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                    <img src="assets/img/profiles/avatar-05.jpg" alt="Profile" class="rounded-circle">
-                                                                </span>
-                                                                <div class="flex-grow-1">
-                                                                    <p class="mb-1"><span class="h6">Robert Fox </span> Was Marked as Late Login <span class="text-danger">09:55 AM</span></p>
-                                                                    <span class="fs-12 noti-time"><i class="ti ti-clock me-1"></i>5 Min Ago</span>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                        <span class="bg-danger badge p-0 d-inline-block badge-status"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="archieve-notification">
-                                                    <div class="notification-list">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="notifications.html" class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-04.jpg" alt="Profile" class="rounded-circle">
-                                                            </a>
-                                                            <div class="flex-grow-1">
-                                                                <p class="mb-1"><a href="notifications.html"><span class="h6">Jenny Wilson </span> Completed <span class="h6">Created New Component</span></a></p>
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="fs-12 noti-time pe-2 me-2 border-end"><i class="ti ti-clock me-1"></i>15 Min Ago</span>
-                                                                    <a href="javascript:void(0);" class="link-primary fa-12 fw-medium">Restore</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-list">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="notifications.html" class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-02.jpg" alt="Profile" class="rounded-circle">
-                                                            </a>
-                                                            <div class="flex-grow-1">
-                                                                <p class="mb-1"><a href="notifications.html"><span class="h6">Jacob Johnson </span> Added Manual Time <span class="h6">2 Hrs</span></a></p>
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="fs-12 noti-time pe-2 me-2 border-end"><i class="ti ti-clock me-1"></i>20 Min Ago</span>
-                                                                    <a href="javascript:void(0);" class="link-primary fa-12 fw-medium">Restore</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-list">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="notifications.html" class="avatar avatar-lg me-2 flex-shrink-0">
-                                                                <img src="assets/img/profiles/avatar-01.jpg" alt="Profile" class="rounded-circle">
-                                                            </a>
-                                                            <div class="flex-grow-1">
-                                                                <p class="mb-1"><a href="notifications.html"><span class="h6">Annete Black </span> Completed <span class="h6">Improved Workflow React</span></a></p>
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="fs-12 noti-time pe-2 me-2 border-end"><i class="ti ti-clock me-1"></i>22 Min Ago</span>
-                                                                    <a href="javascript:void(0);" class="link-primary fa-12 fw-medium">Restore</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-between topnav-dropdown-footer">
-                                            <div class="d-flex align-items-center">
-                                                <a href="#" class="link-primary text-decoration-underline me-3">Mark all as Read</a>
-                                                <a href="#" class="link-danger text-decoration-underline">Clear All</a>
-                                            </div>
-                                            <a href="notifications.html" class="btn btn-primary btn-sm d-inline-flex align-items-center">View All Notifications<i class="ti ti-chevron-right ms-1"></i></a>
-                                        </div>
-                                    </div>
+
+                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                                        {% if navbar_notifications %}
+                                            {% for note in navbar_notifications %}
+                                                <li class="dropdown-item {% if not note.is_read %}fw-bold{% endif %}">
+                                                    {{ note.message }}
+                                                    <br>
+                                                    <small class="text-muted">{{ note.created_at|date:"M d, H:i" }}</small>
+                                                </li>
+                                            {% endfor %}
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-center" href="{% url 'managementSystem:notifications_list' %}">View All</a></li>
+                                        {% else %}
+                                            <li class="dropdown-item text-center text-muted">No notifications</li>
+                                        {% endif %}
+                                    </ul>
                                 </div>
+
                                 <div class="dropdown profile-dropdown">
                                     <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                         <span class="avatar avatar-md">
@@ -308,12 +163,6 @@
                                                 <p class="fs-13 text-light">Manager</p>
                                             </div>
                                         </div>
-                                        {% comment %} <div class="py-2 px-3">
-                                            <h6 class="mb-2">Switch Account</h6>
-                                            <a href="javascript:void(0)" class="btn btn-success btn-sm w-100">
-                                                <i class="ti ti-switch-horizontal text-white me-1"></i>Swith to Manager
-                                            </a>
-                                        </div> {% endcomment %}
                                         <a class="dropdown-item logout d-flex align-items-center" href="{% url 'logout' %}">
                                             <i class="ti ti-logout me-2"></i>Signout
                                         </a>
@@ -484,7 +333,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#" onclick="return confirm('Are you sure you want to restore the database? This will overwrite current data!')">
+                                        <a href="{% url 'managementSystem:restore' %}" onclick="return confirm('Are you sure you want to restore the database? This will overwrite current data! Backup current data' )">
                                             <i class="ti ti-restore"></i><span>Restore</span>
                                         </a>
                                     </li>
