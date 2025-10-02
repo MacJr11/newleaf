@@ -38,10 +38,13 @@ def dashboard_view(request):
     )
 
     # Recent orders
-    recent_orders = PurchaseOrder.objects.order_by("-date")[:5]
-    pending_percent = round((pending_orders/total_orders)*100)
-    completed_percent = round((completed_orders/total_orders)*100)
-    inprogrs_percent = round((in_progress_orders/total_orders)*100)
+    if total_orders > 0:
+        recent_orders = PurchaseOrder.objects.order_by("-date")[:5]
+        pending_percent = round((pending_orders/total_orders)*100)
+        completed_percent = round((completed_orders/total_orders)*100)
+        inprogrs_percent = round((in_progress_orders/total_orders)*100)
+    else:
+        pending_percent = completed_percent = inprogrs_percent = recent_orders = 0
 
     top_workers = (
         Worker.objects.annotate(task_count=Count("taskassignment"))
