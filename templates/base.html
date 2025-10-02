@@ -73,18 +73,18 @@
                                 <a id="toggle_btn" href="javascript:void(0);">
                                     <i class="ti ti-chevron-left"></i>
                                 </a>
-                                <div class="dropdown add-dropdown me-3">
-                                    <a href="#" class="btn btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
-                                        <i class="ti ti-plus me-1"></i>Add New
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-start p-2">
-                                        <li><a class="dropdown-item d-flex align-items-center" href=" {% url 'workers:worker_list' %}"><i class="ti ti-user me-2"></i>Employee</a></li>
-                                        <li><a class="dropdown-item d-flex align-items-center" href="{% url 'managementSystem:register_client' %}"><i class="ti ti-users-plus me-2"></i>Client</a></li>
-                                        <li><a class="dropdown-item d-flex align-items-center" href="{% url 'managementSystem:create_order' %}"><i class="ti ti-progress-check me-2"></i>Purchase Order</a></li>
-                                    </ul>
-                                </div>
                                 <span class="badge badge-md bg-soft-primary badge-time d-inline-flex align-items-center" id="clock">
-                                <i class="ti ti-clock me-1"></i></span>
+                                    <i class="ti ti-clock me-1"></i></span>
+                                    <div class="dropdown add-dropdown me-3" style="margin-left: 20px;">
+                                        <a href="#" class="btn btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
+                                            <i class="ti ti-plus me-1"></i>Add New
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-start p-2">
+                                            <li><a class="dropdown-item d-flex align-items-center" href=" {% url 'workers:worker_list' %}"><i class="ti ti-user me-2"></i>Employee</a></li>
+                                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'managementSystem:register_client' %}"><i class="ti ti-users-plus me-2"></i>Client</a></li>
+                                            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'managementSystem:create_order' %}"><i class="ti ti-progress-check me-2"></i>Purchase Order</a></li>
+                                        </ul>
+                                    </div>
                             </div>
 
                             <div class="d-flex align-items-center">
@@ -133,11 +133,13 @@
                                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
                                         {% if navbar_notifications %}
                                             {% for note in navbar_notifications %}
-                                                <li class="dropdown-item {% if not note.is_read %}fw-bold{% endif %}">
-                                                    {{ note.message }}
-                                                    <br>
-                                                    <small class="text-muted">{{ note.created_at|date:"M d, H:i" }}</small>
-                                                </li>
+                                               <a href="{% url 'managementSystem:notifications_list' %}">
+                                                   <li class="dropdown-item {% if not note.is_read %}fw-bold{% endif %}">
+                                                       {{ note.message }}
+                                                       <br>
+                                                       <small class="text-muted">{{ note.created_at|date:"M d, H:i" }}</small>
+                                                   </li>
+                                               </a>
                                             {% endfor %}
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item text-center" href="{% url 'managementSystem:notifications_list' %}">View All</a></li>
@@ -196,13 +198,15 @@
                             {% endif %}
                         </a>
 
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
                             {% if navbar_notifications %}
                                 {% for note in navbar_notifications %}
                                     <li class="dropdown-item {% if not note.is_read %}fw-bold{% endif %}">
-                                        {{ note.message }}
-                                        <br>
-                                        <small class="text-muted">{{ note.created_at|date:"M d, H:i" }}</small>
+                                       <a href="{% url 'managementSystem:notifications_list' %}">
+                                           {{ note.message }}
+                                           <br>
+                                           <small class="text-muted">{{ note.created_at|date:"M d, H:i" }}</small>
+                                       </a>
                                     </li>
                                 {% endfor %}
                                 <li><hr class="dropdown-divider"></li>
@@ -251,7 +255,7 @@
                             <a href="#" class="btn btn-md border d-inline-flex align-items-center fs-12 px-2" data-bs-toggle="dropdown">
                                 <i class="ti ti-plus me-1 text-gray-5"></i>Add New
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-start p-2">
+                            <ul class="dropdown-menu dropdown-menu-start p-2" stytle="z-index: 10;">
                                 <li><a class="dropdown-item d-flex align-items-center" href="employees.html"><i class="ti ti-user me-2"></i>Employee</a></li>
                                 <li><a class="dropdown-item d-flex align-items-center" href="teams.html"><i class="ti ti-users-plus me-2"></i>Team</a></li>
                                 <li><a class="dropdown-item d-flex align-items-center" href="projects.html"><i class="ti ti-progress-check me-2"></i>Projects</a></li>
@@ -358,6 +362,7 @@
                                 // Optionally update styles
                                 document.querySelectorAll(".notification-item").forEach(item => {
                                     item.classList.remove("unread");
+                                    window.location.reload();
                                 });
                             }
                         });

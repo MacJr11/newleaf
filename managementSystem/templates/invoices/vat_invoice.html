@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VAT Invoice - {{ invoice.purchase_order.po_number }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .invoice-box {
+            border: 1px solid #eee;
+            padding: 20px;
+            width: 800px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #eee;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .right {
+            text-align: right;
+        }
+        .totals {
+            margin-top: 20px;
+            width: 100%;
+        }
+        .totals td {
+            padding: 8px;
+        }
+        .print-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .print-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="main-wrapper"> 
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="invoice-box">
+                <h2>VAT Invoice</h2>
+            
+                <p><strong>Purchase Order:</strong> {{ invoice.purchase_order.po_number }}</p>
+                <p><strong>Client:</strong> {{ invoice.purchase_order.client }}</p>
+                <p><strong>Date:</strong> {{ invoice.created_at|date:"F j, Y" }}</p>
+            
+                <table>
+                    <tr>
+                        <th>Qty</th>
+                        <th>Description</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                    {% for item in invoice.purchase_order.items.all %}
+                    <tr>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ item.unit_price }}</td>
+                        <td class="right">{{ item.gross|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            
+                <table class="totals">
+                    <tr>
+                        <td class="right"><strong>Tax Exclusive Value:</strong></td>
+                        <td class="right">{{ invoice.gross|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td class="right">NHIL (2.5%):</td>
+                        <td class="right">{{ invoice.nhil|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td class="right">GETFund Levy (2.5%):</td>
+                        <td class="right">{{ invoice.getfund_levy|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td class="right">COVID Levy (1%):</td>
+                        <td class="right">{{ invoice.covid_levy|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td class="right">Total Levy Inclusive (i+ii+iii+iv):</td>
+                        <td class="right">{{ invoice.total_levy|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td class="right">VAT(15%)(v):</td>
+                        <td class="right">{{ invoice.vat|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td class="right"><strong>Total Tax Inclusive Value (v+vii):</strong></td>
+                        <td class="right"><strong>{{ invoice.total_amount|floatformat:2 }}</strong></td>
+                    </tr>
+                </table>
+            
+                <button class="print-btn" onclick="window.print()">Print Invoice</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+      <!-- Page wrapper -->
+</body>
+
+<script data-cfasync="false" src="{% static 'cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min-2.js' %}">
+
+</script><script src="{% static 'js/jquery-3.7.1.min.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<!-- Bootstrap Core JS -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<!-- Slimscroll JS -->
+<script src="{% static 'js/jquery.slimscroll.min.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<!-- Select2 JS -->
+<script src="{% static 'plugins/select2/js/select2.min.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<!-- Custom JS -->
+<script src="{% static 'js/script.js' %}" type="bffac48742d7418334c7bee8-text/javascript"></script>
+
+<script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="bffac48742d7418334c7bee8-|49" defer=""></script>
+</html>
+
+
+{% endblock %}

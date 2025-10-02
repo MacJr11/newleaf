@@ -19,14 +19,32 @@
             
                     <!-- Order Item -->
                     <div class="mb-3">
+                        <label for="order_item" class="form-label">Item Number</label>
+                        <input type="number" name="order_no" min="1" class="form-control" value="{{ item.order_no }}" required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
                         <label for="order_item" class="form-label">Description</label>
                         <textarea name="description" class="form-control" required>{{ item.description }}</textarea>
                     </div>
             
-                    <!-- Workers -->
+                    <!-- quantity -->
                     <div class="mb-3">
-                        <label for="workers" class="form-label">Quantity:</label>
+                        <label for="quantity" class="form-label">Quantity:</label>
                         <input type="number" name="quantity" min="1" class="form-control" value="{{ item.quantity }}" required>
+                    </div>
+
+                    <!-- size -->
+                    <div class="mb-3">
+                        <label for="size" class="form-label">Size:</label>
+                        <input type="text" name="size" class="form-control" value="{{ item.size }}" required>
+                    </div>
+
+                    <!-- size -->
+                    <div class="mb-3">
+                        <label for="workers" class="form-label">Color:</label>
+                        <input type="text" name="color" class="form-control" value="{{ item.color }}" required>
                     </div>
             
                     <!-- Deadline -->

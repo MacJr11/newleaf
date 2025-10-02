@@ -27,4 +27,6 @@ urlpatterns = [
     path('oauth2callback/restore/', views.oauth2callback_restore, name='oauth2callback_restore'),
     path("notifications/", views.notifications_list, name="notifications_list"),
     path("notifications/mark-read/", views.mark_all_notifications_read, name="mark_all_notifications_read"),
+    path("vat-invoice/generate/<int:po_id>/", views.generate_vat_invoice, name="generate_vat_invoice"),
+    path("vat-invoice/<int:vat_id>/", views.view_vat_invoice, name="view_vat_invoice"),
 ]

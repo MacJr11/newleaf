@@ -28,19 +28,32 @@
                         <a href="{% url 'managementSystem:edit_po' po.id %}" class="btn btn-md btn-primary fs-13 fw-medium me-2" data-bs-target="#edit-manual-time" data-bs-toggle=""><i class="ti ti-edit me-1"></i>Edit</a>
                         {% if po.invoice %}
                             <!-- Show View Invoice button if invoice exists -->
-                            <a href="{% url 'managementSystem:view_invoice' po.invoice.id %}" class="btn btn-md btn-success fs-13 fw-medium">
+                            <a href="{% url 'managementSystem:view_invoice' po.invoice.id %}" class="btn btn-md btn-success fs-13 fw-medium" style="margin-right: 8px;">
                                 View Invoice
                             </a>
                         {% else %}
                             <!-- Show Generate Invoice button if no invoice exists -->
                             <form method="post" action="{% url 'managementSystem:generate_invoice' po.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-md btn-dark fs-13 fw-medium">
+                                <button type="submit" class="btn btn-md btn-dark fs-13 fw-medium" style="margin-right: 8px;">
                                     Generate Invoice
                                 </button>
                             </form>
                         {% endif %}
+                        
+                        {% if po.vat_invoice %}
+                            <!-- Show View Invoice button if invoice exists -->
+                            <a href="{% url 'managementSystem:view_vat_invoice' po.vat_invoice.id %}" class="btn btn-md btn-success fs-13 fw-medium">
+                                View VAT Invoice
+                            </a>
+                            {% else %}
+                            <!-- Show Generate Invoice button if no invoice exists -->
+                            <a href="{% url 'managementSystem:generate_vat_invoice' po.id %}" class="btn btn-md btn-dark fs-13 fw-medium">
+                                Generate VAT Invoice
+                            </a>
+                        {% endif %}
                     </div>
+                    
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-xl-3">
@@ -110,8 +123,11 @@
                         <table class="table">
                             <thead class="thead-light text-uppercase">
                                 <tr>
+                                    <th class="no-sort">Item Number</th>
                                     <th class="no-sort">Description</th>
                                     <th class="no-sort">Quantity</th>
+                                    <th class="no-sort">Size</th>
+                                    <th class="no-sort">Color</th>
                                     <th class="no-sort">Unit Price</th>
                                     <th class="no-sort">Total Price</th>
                                     <th class="no-sort">Workers on this order</th>
@@ -121,8 +137,11 @@
                             <tbody>
                                 {% for item in items %}
                                 <tr>
+                                    <td>{{ item.order_no }}</td>
                                     <td>{{ item.description }}</td>
                                     <td>{{ item.quantity }}</td>
+                                    <td>{{ item.size }}</td>
+                                    <td>{{ item.color }}</td>
                                     <td>{{ item.unit_price }}</td>
                                     <td>{{ item.total_price }}</td>
                                     <td>{{ item.worker_count }}</td>
@@ -146,7 +165,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="6">No items yet.</td>
+                                    <td colspan="9">No items yet.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

@@ -25,6 +25,11 @@ import os
 from io import BytesIO
 import os, shutil
 from managementSystem.utils import notify
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from decimal import Decimal
+
+
 
 def register_client(request):
     if request.method == 'POST':
@@ -192,12 +197,18 @@ def add_order_item(request, po_id):
     po = get_object_or_404(PurchaseOrder, id=po_id)
     if request.method == 'POST':
         description = request.POST.get('description')
+        order_number = request.POST.get('order_no')
+        size = request.POST.get('size')
+        color = request.POST.get('color')
         quantity = request.POST.get('quantity')
         unit_price = request.POST.get('unit_price')
 
         OrderItem.objects.create(
             po=po,
             description=description,
+            order_no=order_number,
+            size=size,      
+            color=color,
             quantity=quantity,
             unit_price=unit_price
         )
@@ -342,6 +353,9 @@ def edit_order_item(request, item_id):
         item.description = request.POST.get("description")
         item.quantity = request.POST.get("quantity")
         item.unit_price = request.POST.get("unit_price")
+        item.color = request.POST.get("color")
+        item.size = request.POST.get("size")
+        item.order_no = request.POST.get("order_no")
         item.save()
 
         return JsonResponse({"success": True, "message": "Item updated successfully!"})
@@ -623,3 +637,26 @@ def mark_all_notifications_read(request):
         Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
         return JsonResponse({"success": True})
     return JsonResponse({"success": False}, status=400)
+
+def generate_vat_invoice(request, po_id):
+    po = get_object_or_404(PurchaseOrder, id=po_id)
+
+    # Calculate gross (sum of all order items)
+    items = OrderItem.objects.filter(po=po)
+    gross = sum(item.unit_price * item.quantity for item in items)
+
+    # If already exists, just redirect to it
+    vat_invoice, created = VATInvoice.objects.get_or_create(
+        purchase_order=po,
+        defaults={'gross': gross}
+    )
+
+    if not created:
+        vat_invoice.gross = gross
+        vat_invoice.save()
+
+    return redirect("managementSystem:view_vat_invoice", vat_invoice.id)
+
+def view_vat_invoice(request, vat_id):
+    invoice = get_object_or_404(VATInvoice, id=vat_id)
+    return render(request, "invoices/vat_invoice.html", {"invoice": invoice})

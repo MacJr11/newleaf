@@ -14,7 +14,6 @@ from django.utils.dateparse import parse_date
 from django.db.models import Sum
 from decimal import Decimal
 
-
 # 1️⃣ Main worker list + adding workers
 def worker_list(request):
     if request.method == 'POST':
@@ -52,7 +51,6 @@ def worker_list(request):
                 photo=photo
             )
             return JsonResponse({'success': True, 'message': 'Worker added successfully!'})
-
     # Pagination setup
     workers = Worker.objects.all().order_by('-id')
     paginator = Paginator(workers, 10)  # 10 workers per page

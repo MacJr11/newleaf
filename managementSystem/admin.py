@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, PurchaseOrder, OrderItem, TaskAssignment, Notification
+from .models import Client, PurchaseOrder, OrderItem, TaskAssignment, Notification, VATInvoice
 
 
 class OrderItemInline(admin.TabularInline):
@@ -38,3 +38,8 @@ class TaskAssignmentAdmin(admin.ModelAdmin):
 class Notification(admin.ModelAdmin):
     list_display = ('user', 'title', 'message', 'created_at', 'is_read')
     list_filter = ('created_at', 'is_read')
+
+@admin.register(VATInvoice)
+class VATInvoice(admin.ModelAdmin):
+    list_display = ('invoice_number', 'purchase_order', 'gross', 'date_issued', 'total_levy', 'vat', 'total_amount')
+    list_filter = ('date_issued', 'gross')
