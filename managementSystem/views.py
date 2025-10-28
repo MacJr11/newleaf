@@ -28,6 +28,8 @@ from managementSystem.utils import notify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from decimal import Decimal
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
 
 
 
@@ -660,3 +662,65 @@ def generate_vat_invoice(request, po_id):
 def view_vat_invoice(request, vat_id):
     invoice = get_object_or_404(VATInvoice, id=vat_id)
     return render(request, "invoices/vat_invoice.html", {"invoice": invoice})
+
+# new proforma invoice code starts here
+def create_proforma_invoice(request):
+    if request.method == "POST":
+        client_name = request.POST.get("client_name")
+
+        invoice = ProformaInvoice.objects.create(
+            client_name=client_name,
+        )
+        return redirect("managementSystem:edit_proforma_invoice", invoice.id)
+
+    return render(request, "invoices/proforma_invoice_form.html")
+
+def edit_proforma_invoice(request, invoice_id):
+    invoice = get_object_or_404(ProformaInvoice, id=invoice_id)
+
+    if request.method == "POST":
+        description = request.POST.get("description")
+        quantity = request.POST.get("quantity")
+        unit_price = request.POST.get("unit_price")
+
+        ProformaItem.objects.create(
+            invoice=invoice,
+            description=description,
+            quantity=Decimal(quantity),
+            unit_price=Decimal(unit_price)
+        )
+        return redirect("managementSystem:edit_proforma_invoice", invoice.id)
+
+    items = invoice.items.all()
+
+    # Calculate totals
+    total = sum(item.total for item in items)
+    invoice.total_amount = total
+    invoice.save()
+
+    return render(request, "invoices/edit_proforma_invoice.html", {
+        "invoice": invoice,
+        "items": items,
+    })
+
+def view_proforma_invoice(request, invoice_id):
+    invoice = get_object_or_404(ProformaInvoice, id=invoice_id)
+    items = invoice.items.all()
+    return render(request, "invoices/view_proforma_invoice.html", {"invoice": invoice, "items": items})
+
+def list_proforma_invoices(request):
+    invoices = ProformaInvoice.objects.all().order_by('-date')
+    return render(request, 'invoices/list_proforma_invoices.html', {'invoices': invoices})
+
+def delete_proforma_item(request, item_id):
+    item = get_object_or_404(ProformaItem, id=item_id)
+    invoice_id = item.invoice.id
+    item.delete()
+    messages.success(request, "Item removed successfully.")
+    return redirect("managementSystem:edit_proforma_invoice", invoice_id)
+
+def delete_proforma_invoice(request, invoice_id):
+    item = get_object_or_404(ProformaInvoice, id=invoice_id)
+    item.delete()
+    messages.success(request, "Item removed successfully.")
+    return redirect("managementSystem:view_proforma_invoices")

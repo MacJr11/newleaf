@@ -21,10 +21,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-   path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(pattern_name='login', permanent=False)),
-    path('users/', include('users.urls')),
-    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+    path('admin/', admin.site.urls),
+    path('users/', include('users.urls', namespace='users')),
+    path('', include('dashboard.urls', namespace='dashboard')),
     path('workers/', include('workers.urls', namespace='workers')),
     path('management/', include('managementSystem.urls', namespace='managementSystem')),
 ]

@@ -17,13 +17,13 @@
                 <div class="card">
                     <div class="card-body" id="invoiceArea">
                         <div class="row justify-content-between align-items-center border-bottom mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-6">
                                 <div class="mb-2">
                                     <img src="{% static 'img/nlogo.svg' %}" width="230" class="img-fluid" alt="logo">
                                 </div>
                                 <p>Designers of industrial garments, working gears and all kinds of company uniform</p>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-6">
                                 <div class=" text-end mb-3">
                                     <h5 class="text-gray-500 mb-1">Invoice No <span class="text-primary">#{{ invoice.id }}</span></h5>
                                     <p class="mb-1 fw-medium">Created Date : <span class="text-dark">{{ invoice.issued_date|date:"d M Y" }}</span> </p>
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <div class="row border-bottom mb-4">
-                            <div class="col-md-5">
+                            <div class="col-md-5 col-sm-5">
                                 <p class="text-dark mb-2 fw-semibold">From</p>
                                 <div>
                                     <p class="text-gray-9 fw-medium mb-1">Newleaf Creations</p>
@@ -41,7 +41,7 @@
                                     <p>Phone : <span class="text-dark">+233 24 4033 849 | +233 20 8121 352 | +233 55 3173 116</span></p>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-5 col-sm-5">
                                 <p class="text-dark mb-2 fw-semibold">To</p>
                                 <div>
                                     <p class="text-gray-9 fw-medium mb-1">{{po.client.name}}</p>
@@ -50,7 +50,7 @@
                                     <p>Phone : <span class="text-dark">{{po.client.phone}}</span></p>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2 col-sm-2">
                                 <div class="mb-3">
                                     <p class="text-title mb-2 fw-medium">Payment Status </p>
                                     <span class="bg-success text-white fs-10 px-1 rounded"><i class="ti ti-point-filled "></i>{{ invoice.status }}</span>

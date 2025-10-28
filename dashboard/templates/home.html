@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      {% load static %}
+    <!-- ======= (REQUIRED META TAGS) ======= -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- ======= (SITE TITLE) ======= -->
+    <title>Newleaf Creations - Home</title>
+
+    <!-- ======= (SITE ICON) ======= -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/nlogo.png' %}">
+
+    <!-- ======= (BOOTSTRAP CSS FILE) ======= -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- ======= (GOOGLE FONT CSS FILE) ======= -->
+    <link rel="stylesheet" href="{% static 'assets/css/google.font.css' %}">
+
+    <!-- ======= (ICONLY ICON FILE) ======= -->
+    <link rel="stylesheet" href="{% static 'assets/ensurx-font/iconly.min.css' %}">
+    
+    <!-- ======= (OWL CAROUSEL CSS) ======= -->
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}">
+
+    <!-- ======= (CUSTOM CSS FILE) ======= -->
+    <link rel="stylesheet" href="{%static 'assets/css/style.css'%}">
+
+    <!-- ======= (CUSTOM RESPONSIVE CSS) ======= -->
+    <link rel="stylesheet" href="{% static 'assets/css/media.css' %}">
+  </head>
+
+  <body>
+    <header>
+      <!-- ======= (HERO SECTION START) ======= -->
+      <div class="hero_top_main">
+       <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            
+          </div>
+        </div>
+       </div>
+      </div>
+      
+      <div class="hero_nav_main">
+        <nav class="navbar navbar-expand-lg">
+          <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard:home' %}"><img src="{% static 'img/nlogo.png' %}" class="img-fluid responsive-img" alt=""></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse align-items-center" id="navbarSupportedContent">
+              <ul class="navbar-nav m-auto">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#aboutsectn">About</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#servicesectn">Services</a>
+                </li> 
+                <li class="nav-item">
+                  <a class="nav-link" href="#contactsectn">Contact</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#login">Login</a>
+                </li>
+              </ul>
+              <form class="d-flex navbar_buttons ms-auto" role="search">
+                <div class="hero_request_call">
+                  <div class="hero_call_left">
+                    <i class="ensurx-call"></i>
+                  </div>
+                  <div class="hero_call_right">
+                    <span>Requesting A Call</span>
+                    <a href="tel:(233)0244033849">+233 24 4033 849</a>
+                  </div>
+                  
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <div class="hero_main">
+        <div class="container">
+        <img src="{% static 'assets/images/bg/hero-big-shape-right1.png' %}" class="img-fluid hero_big_shape_right" alt="">
+        <!-- <img src="{% static 'assets/images/bg/hero-shape2.png' %}" class="img-fluid hero_shape2" alt=""> -->
+        <img src="{% static 'assets/images/bg/hero-icon-right.png' %}" class="img-fluid hero_icon_right" alt="">
+        <img src="{% static 'assets/images/bg/hero-icon-left.png' %}" class="img-fluid hero_icon_left" alt="">
+          <div class="row banner_reverse align-items-center">
+            <div class="col-md-6">
+              <div class="hero_left">
+                <div class="common_heading">
+                  <div class="title_style ">
+                    <span></span><h3>Our Company</h3>
+                  </div>
+                  <h1>Newleaf Creations <br><span> Your Lifestyle! </span> </h1>
+              </div>
+              <p>Fortifying workforce, One stitch at a time. Designers of industrial garments, working gears and all kinds of company uniform.</p>
+              <div class="hero_left_buttons">
+                <a href="#servicesectn" class="common_btn btn">SERVICES</a>
+                 <a href="#contactsectn" class="video_btn btn "> <i class="ensurx-video-icon"></i> CONTACT US</a>
+              </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="hero_right">
+                <div class="hero_banner">
+                  <img src="{% static 'assets/images/img/hero-banner copy1.png'%}" class="img-fluid" alt="">
+                </div>
+                <div class="happy_customers">
+                  <h4><span class="counter">30</span><span>+</span></h4>
+                 <ul>
+                  <li><img src="{% static 'assets/images/avatar/customer1.png' %}" class="img-fluid" alt=""></li>
+                  <li><img src="{% static 'assets/images/avatar/customer2.png' %}" class="img-fluid" alt=""></li>
+                  <li><img src="{% static 'assets/images/avatar/customer3.png' %}" class="img-fluid" alt=""></li>
+                  <li><img src="{% static 'assets/images/avatar/customer4.png' %}" class="img-fluid" alt=""></li>
+                  <li><img src="assets/images/avatar/customer5.png" class="img-fluid" alt=""></li>
+                 </ul>
+                 <p>Happy Customers</p>
+                </div>
+                <div class="stay_safe">
+                  <img src="{% static 'assets/images/icon/stay-safe.svg' %}" class="img-fluid" alt="">
+                  <p>Quality</p>
+                </div>
+                <div class="hero_reviews">
+                  <ul>
+                    <li> <i class="ensurx-review-star"></i> </li>
+                    <li> <i class="ensurx-review-star"></i> </li>
+                    <li> <i class="ensurx-review-star"></i> </li>
+                    <li> <i class="ensurx-review-star"></i> </li>
+                    <li> <i class="ensurx-review-star"></i> </li>
+                    <li><h4>(5.0)</h4></li>
+                  </ul>
+                  <p>50 Customers Reviews</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+     <!-- ======= (HERO SECTION END) ======= -->
+
+    </header>
+    
+
+<main class="hero_main_wrapper" id="aboutsectn"> 
+
+  <!-- ======= (ABOUT COMPANY SECTION START) ======= -->
+    <section class="about_company_section">
+      <div class="container">
+          <div class="row align-items-center">
+              <div class="col-md-12 col-lg-5">
+                  <div class="company_left_wrapper">
+                      <div class="company_separate_left">
+                          <img src="{% static 'assets/images/img/about-company-left-top1.png' %}" class="img-fluid ms-3" alt="">
+                          <img src="{% static 'assets/images/img/about-company-left-bottom1.png' %}" class="img-fluid" alt="">
+                      </div>
+                      <div class="company_left_middle text-center">
+                          <h2 style="color: #f14f0e;"><span class="counter">20</span><span>+</span></h2>
+                          <p style="color: #f14f0e;">Years of <br> Experience</p>
+                      </div>
+                      <div class="company_separate_right">
+                          <img src="{% static 'assets/images/img/about-company-shape.png' %}" class="img-fluid me-5" alt="">
+                          <img src="{% static 'assets/images/img/about-company-left-right1.png' %}" class="img-fluid" alt="">
+                      </div>
+
+                  </div>
+              </div>
+              <div class="col-md-12 col-lg-7 mt-5">
+                  <div class="company_right_main">
+                      <div class="common_heading">
+                          <div class="title_style">
+                            <span></span><h3>About Our Company</h3>
+                          </div>
+                          <h2>Designers of industrial garments,working gears and<span> all kinds of company uniform. </span> </h2>
+                      </div><br>
+                      
+                      <div class="company_right_item">
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <div class="company_right_item_wrapper">
+                                      <div class="company_right_icon">
+                                          <img src="{% static 'assets/images/icon/about-company-icon1.svg' %}" class="img-fluid" alt="">
+                                      </div>
+                                      <div class="company_right_content">
+                                          <h6>Honored with Top Prizes</h6>
+                                          <p>Our journey keeps shining brighter <br> multiple awards, one mission </p>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-6">
+                                  <div class="company_right_item_wrapper">
+                                      <div class="company_right_icon">
+                                          <img src="{% static 'assets/images/icon/about-company-icon2.svg' %}" class="img-fluid" alt="">
+                                      </div>
+                                      <div class="company_right_content">
+                                          <h6>Worth every penny</h6>
+                                          <p>Every coin you spend <br> with us count </p>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-12">
+                                  <div class="company_author_main">
+                                      <div class="company_author_wrapper">
+                                          <img src="assets/images/img/about-company-avatar.png" class="img-fluid" alt="">
+                                          <h6>Madam Alice</h6>
+                                          <span>Founder & CEO</span>
+                                          <img src="{% static 'assets/images/icon/white-sign.png' %}" class="img-fluid" alt="">
+                                      </div>
+                                    <div class="company_author_right">
+                                      <p>At Newleaf creations our dedicated team of experts is here to give you the best and quality garmets and company gears, ensuring you make informed choices to your unique needs. </p>
+                                    </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+    <!-- ======= ( SERVICE BLOG START) ======= -->
+      <section class="insurance_company_section" id="servicesectn">
+        <div class="common_heading text-center">
+            <div class="title_style">
+              <span></span><h3>Our Best Services</h3>
+            </div>
+            <h2> We Pride Ourselves On Offering <br> <span> Great Service  </span> </h2>
+           </div>
+           <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-md-6 col-lg-3 pe-4">
+                    <div class="insurance_item">
+                        <div class="insurance_top">
+                            <div class="insurance_top_icon">
+                                <img src="{% static 'assets/images/icon/facuniform.svg' %}" class="img-fluid" alt="">
+                            </div>
+                            <h2>01</h2>
+                            <div class="insurance_top_outside">
+                                <img src="{% static 'assets/images/icon/insurance-outside-arrow.svg' %}" class="img-fluid" alt="">
+                            </div>
+                        </div>
+                        <h4>Industrial<br> Garmets</h4>
+                        <p>Strong reliable garments designed for demanding industries.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 pe-4">
+                    <div class="insurance_item">
+                        <div class="insurance_top">
+                            <div class="insurance_top_icon">
+                                <img src="{% static 'assets/images/icon/workingear.svg' %}" class="img-fluid" alt="">
+                            </div>
+                            <h2>02</h2>
+                            <div class="insurance_top_outside">
+                                <img src="{% static 'assets/images/icon/insurance-outside-arrow.svg' %}" class="img-fluid" alt="">
+                            </div>
+                        </div>
+                        <h4>Working  <br> Gears</h4>
+                        <p>Funtional designs that combine comfort, safety, and efficiency.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 pe-4">
+                    <div class="insurance_item">
+                        <div class="insurance_top">
+                            <div class="insurance_top_icon">
+                                <img src="{% static 'assets/images/icon/companyuniform.svg' %}" class="img-fluid" alt="">
+                            </div>
+                            <h2>03</h2>
+                           
+                        </div>
+                        <h4>Company <br> Uniforms</h4>
+                        <p>Custom-tailored uniforms for a unified and polished workforce</p>
+                    </div>
+                </div>
+            </div>
+           </div>
+    </section>
+    <!-- ======= ( INSURANCE COMPANY SECTION END) ======= -->
+
+    <!-- ======= (CLIENT SECTION START) ======= -->
+     <section class="client_section">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="owl-carousel client_carousel">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <!-- ======= (CLIENT SECTION END) ======= -->
+
+    <!-- ======= (FAQ SECTION START) ======= -->
+    <section class="faq_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="faq_main">
+                        <img src="{% static 'assets/images/img/fag1.png' %}" class="img-fluid" alt="">
+                        <a href="#">
+                            <div class="faq_msg">
+                                <img src="{% static 'assets/images/icon/faq-msg.svg' %}" class="img-fluid" alt="">
+                            </div>
+                             If You Have More Question  <span> Contact Us..</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="faq_content_main">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-8 ms-auto">
+                        <div class="faq_right_content ">
+                          <div class="row gy-4 accordion" id="accordionExample">
+
+                            <div class="col-md-12">
+                             <div class="accordion-item">
+                               <h2 class="accordion-header">
+                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirten" aria-expanded="true" aria-controls="collapseThirten">
+                                   Whay Newleaf Creations?
+                                 </button>
+                               </h2>
+                               <div id="collapseThirten" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                 <div class="accordion-body">
+                                  <p>Our dedicated team of experts is here to guide you bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.</p>
+                                 </div>
+                               </div>
+                             </div>
+                            </div>
+                            <div class="col-md-12">
+                               <div class="accordion-item">
+                                 <h2 class="accordion-header">
+                                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourteen" aria-expanded="false" aria-controls="collapseFourteen">
+                                     what's Newleaf Creations?
+                                   </button>
+                                 </h2>
+                                 <div id="collapseFourteen" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                   <div class="accordion-body">
+                                     <p>Our dedicated team of experts is here to guide you bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.</p>
+                                   </div>
+                                 </div>
+                               </div>
+                            </div>
+                            <div class="col-md-12">
+                             <div class="accordion-item">
+                               <h2 class="accordion-header">
+                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiveteen" aria-expanded="false" aria-controls="collapseFiveteen">
+                                   How do I send a project request?
+                                 </button>
+                               </h2>
+                               <div id="collapseFiveteen" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                 <div class="accordion-body">
+                                   <p>Our dedicated team of experts is here to guide you bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.</p>
+                                 </div>
+                               </div>
+                             </div>
+                            </div>
+                            <div class="col-md-12">
+                             <div class="accordion-item">
+                               <h2 class="accordion-header">
+                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSixteen" aria-expanded="false" aria-controls="collapseSixteen">
+                                   How long does it take to complete a project?
+                                 </button>
+                               </h2>
+                               <div id="collapseSixteen" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                 <div class="accordion-body">
+                                   <p>Our dedicated team of experts is here to guide you bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.</p>
+                                 </div>
+                               </div>
+                             </div>
+                            </div>
+                           
+                         </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ======= (FAQ SECTION START) ======= -->
+
+    <!-- ======= (CUSTOMER REVIEW SECTION START) ======= -->
+    <section class="customer_review_section">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="customer_review_main">
+                        <div class="common_heading">
+                            <div class="title_style">
+                              <span></span><h3>Our Happy Customers</h3>
+                            </div>
+                            <h2>Customer Reviews And Their  <br> <span> Perspectives On Us </span> </h2>
+                           </div>
+                           <div class="review_carousel owl-carousel">
+                            <div class="review_item">
+                                <div class="review_author">
+                                    <div class="review_author_line">
+                                        <img src="{% static 'assets/images/avatar/review1.png' %}" class="img-fluid" alt="">
+                                    </div>
+                                </div>
+                                <h4>Darrell Steward</h4>
+                                <span>CEO of ABC co</span>
+                                <p>Our dedicated team of experts is here to guide you through every step of the insurance journey, ensuring you make informed choices tailored </p>
+                               <div class="review_quote ">
+                                <img src="{% static 'assets/images/icon/quote-red.svg' %}" class="img-fluid" alt="">
+                               </div>
+                            </div>
+                            <div class="review_item">
+                                <div class="review_author">
+                                    <div class="review_author_line">
+                                        <img src="{% static 'assets/images/avatar/review2.png' %}" class="img-fluid" alt="">
+                                    </div>
+                                </div>
+                                <h4>Cody Fisher</h4>
+                                <span>CEO of ABC co</span>
+                                <p>Our dedicated team of experts is here to guide you bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.</p>
+                               <div class="review_quote ">
+                                <img src="{% static 'assets/images/icon/quote-red.svg' %}" class="img-fluid" alt="">
+                               </div>
+                            </div>
+                            <div class="review_item">
+                                <div class="review_author">
+                                    <div class="review_author_line">
+                                        <img src="{% static 'assets/images/avatar/review5.png' %}" class="img-fluid" alt="">
+                                    </div>
+                                </div>
+                                <h4>Kristin Watson</h4>
+                                <span>CEO of ABC co</span>
+                                <p>Our dedicated team of experts is here to guide you bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.</p>
+                               <div class="review_quote ">
+                                <img src="{% static 'assets/images/icon/quote-red.svg' %}" class="img-fluid" alt="">
+                               </div>
+                            </div>
+                            <div class="review_item">
+                                <div class="review_author">
+                                    <div class="review_author_line">
+                                        <img src="{% static 'assets/images/avatar/review4.png' %}" class="img-fluid" alt="">
+                                    </div>
+                                </div>
+                                <h4>Darrell Steward</h4>
+                                <span>CEO of ABC co</span>
+                                <p>Our dedicated team of experts is here to guide you bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.</p>
+                               <div class="review_quote ">
+                                <img src="{% static 'assets/images/icon/quote-red.png' %}" class="img-fluid" alt="">
+                               </div>
+                            </div>
+                           </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <!-- ======= (CUSTOMER REVIEW SECTION START) ======= -->
+
+   <!-- contact section -->
+    <section class="common_banner_section" id="contactsectn">
+            <div class="common_banner_content">
+               <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="common_banner_content">
+                            <h1>Contact</h1>
+                            <p>Need any help concernign our businesses you can contact us without any hesitation. Our expert support team with help you.</p>
+                        </div>
+                    </div>
+                </div>
+               </div>
+            </div>
+    </section>
+
+    <section class="contact_page_main">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="contact_page_left">
+                  <h2>Get in Touch</h2>
+                  <p>Below is our company's info</p>
+
+                  <div class="contact_info_wrapper">
+                    <i class="ensurx-footer-map"></i>
+                    <div class="contact_page_info">
+                      <a href="#">P.O.Box 89, Konongo-Asante Akyem Central</a>
+                      <span>Address</span>
+                    </div>
+                   </div>
+                   <div class="contact_info_wrapper">
+                    <i class="ensurx-footer-call"></i>
+                    <div class="contact_page_info">
+                      <a href="tel:(233)244033849">+233 24 4033 849</a>
+                      <a href="tel:(233)208121352">+233 20 8121 352</a>
+                      <a href="tel:(233)553173116">+233 55 3173 116</a>
+                      <span>Phone Number  </span>
+                    </div>
+                   </div>
+                   <div class="contact_info_wrapper">
+                    <i class="ensurx-footer-mail"></i>
+                    <div class="contact_page_info">
+                      <a href="mailto:newleafcreations@yahoo.com">newleafcreations@yahoo.com</a>
+                      <span>E-mail Address</span>
+                    </div>
+                   </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="contact_page_right_wrapper">
+                  <div class="contact_page_right">
+                    <form class="row ">
+                      <div class="col-md-12">
+                        <h2>Give Us A Message</h2>
+                        <p>Our dedicated team of experts will get back to you soon.</p>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="input_feild">
+                          <input type="text" class="form-control name" placeholder="Name">
+                          <div class="icon">
+                            <i class="ensurx-user"></i>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="input_feild">
+                          <input type="email" class="form-control email" placeholder="E-mail">
+                          <div class="icon">
+                            <i class="ensurx-footer-mail"></i>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="input_feild">
+                          <input type="text" class="form-control phone" placeholder="Phone">
+                          <div class="icon">
+                            <i class="ensurx-call"></i>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-6">
+                        <select class="form-select form-control">
+                          <option>Subject</option>
+                        </select>
+                      </div>
+                    
+                      <div class="col-12">
+                      <div class="textarea_feild">
+                        <textarea placeholder="Message" class="form-control"></textarea>
+                        <div class="icon">
+                          <i class="ensurx-pen"></i>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-md-12">
+                        <a href="#" class="common_btn">Submit Now <i class="ensurx-arrow-right"></i></a>
+                      </div>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+   <!-- contact section ends here -->
+
+</main>
+
+<!-- ======= ( FOOTER SECTION START ) ======= -->
+<footer>
+  <div class="footer_section">
+    <div class="container">
+      <div class="row gy-5">
+        <div class="col-md-3 col-sm-6">
+          <div class="footer_first">
+            <img src="assets/images/logo/footer-logo.png" class="img-fluid" alt="">
+            <p>Welcome to Newleaf Creations
+              website, where safeguarding 
+              your future is our foremost priority. As a 
+              leading player in the fashion industry</p>
+            <ul>
+              <li><a href="#"><i class="ensurx-facebook-solid"></i></a></li>
+              <li><a href="#"><i class="ensurx-x-twitter"></i></a></li>
+              <li><a href="#"><i class="ensurx-linkedin-solid"></i></a></li>
+              <li><a href="#"><i class="ensurx-instagram"></i></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="footer_explore">
+              <div class="title_style">
+                <h3>Explore</h3>  <span></span>
+              </div>
+              <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="aboutsectn">About Company</a></li>
+                <li><a href="#servicesectn">Our Services</a></li>
+                <li><a href="#contactsectn">Get In Touch</a></li>
+                <li><a href="{% url 'users:login' %}" id="login">#Manager</a></li>
+              </ul>
+            
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="footer_contact">
+              <div class="title_style">
+                <h3>Contact</h3>  <span></span>
+              </div>
+             <div class="footer_contact_wrapper">
+              <i class="ensurx-footer-map"></i>
+              <div class="footer_contact_info">
+                <a href="#">280 Granite Run Drive <br> SuiteHobert, LA 90010, USA.</a>
+              </div>
+             </div>
+             <div class="footer_contact_wrapper">
+              <i class="ensurx-footer-call"></i>
+              <div class="footer_contact_info">
+                <a href="tel:+880123456787">+880 123 456 787</a>
+                <a href="tel:+008123456789">+008 123 456 789</a>
+              </div>
+             </div>
+             <div class="footer_contact_wrapper">
+              <i class="ensurx-footer-mail"></i>
+              <div class="footer_contact_info">
+                <a href="mailto:info@vnsurx.com">info@vnsurx.com</a>
+                <a href="mailto:example@example.com">example@example.com</a>
+              </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer_bottom">
+    <div class="container">
+      <div class="row">
+          <div class="col-md-12">
+              <p>© NewLeaf Creations 2025. All Rights Reserved - By: <a href="https://www.behance.net/macdevbiz" class="link-primary"> Macdev</a></p>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+</footer>
+<!-- ======= ( FOOTER SECTION END ) ======= -->
+
+
+
+  
+    <!-- ======= (JQUERY CDN FILE) ======= -->
+    <script src="{% static 'assets/js/jquery-1.12.4.min.js' %}"></script>
+
+    <!-- ======= (BOOTSTRAP JS FLIE) ======= -->
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    
+    <!-- ======= (OWL CAROUSEL JS FILE) ======= -->
+    <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+
+    <!-- ======= (CUSTOM JS FILE) ======= -->
+    <script defer src="{% static 'assets/js/script.js' %}"></script>
+
+    <!-- ======= (COUNTER UP JS) ======= -->
+    <script src="{% static 'assets/js/jquery.waypoints.min.js' %}"></script>
+    <script  src="{% static 'assets/js/jquery.counterup.min.js' %}"></script>
+
+    <!-- ======= (MIXITUP JS FILE) ======= -->
+    <script src="{% static 'assets/js/mixitup.min.js' %}"></script>
+    
+  </body>
+</html>

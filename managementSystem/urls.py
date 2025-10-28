@@ -29,4 +29,12 @@ urlpatterns = [
     path("notifications/mark-read/", views.mark_all_notifications_read, name="mark_all_notifications_read"),
     path("vat-invoice/generate/<int:po_id>/", views.generate_vat_invoice, name="generate_vat_invoice"),
     path("vat-invoice/<int:vat_id>/", views.view_vat_invoice, name="view_vat_invoice"),
+
+    
+    path("proforma/create/", views.create_proforma_invoice, name="create_proforma_invoice"),
+    path("proforma/<int:invoice_id>/edit/", views.edit_proforma_invoice, name="edit_proforma_invoice"),
+    path("proforma/<int:invoice_id>/view/", views.view_proforma_invoice, name="view_proforma_invoice"),
+    path('proforma/invoices/', views.list_proforma_invoices, name='list_proforma_invoices'),
+    path('proforma/item/<int:item_id>/delete/', views.delete_proforma_item, name='delete_proforma_item'),
+    path('proforma/<int:invoice_id>/delete/', views.delete_proforma_invoice, name='delete_proforma_invoice'),
 ]

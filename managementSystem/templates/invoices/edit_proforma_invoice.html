@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="main-wrapper">
+        <div class="page-wrapper">
+            <div class="content content-two create-project">
+               <div class="container mt-4">
+                 <div class="card shadow-none">
+                       <div class="card-body">
+
+                            <h2>Proforma Invoice {{ invoice.po_number }}</h2>
+                            <p>Client: {{ invoice.client_name }}</p>
+                            <p>Date: {{ invoice.date }}</p>
+
+                            <h3>Add Item</h3>
+                            <form method="post">
+                                {% csrf_token %}
+                                <label class="form-label">Description:</label>
+                                <input type="text" name="description" class="form-control" required>
+                            
+                                <label class="form-label">Quantity:</label>
+                                <input type="number" name="quantity" class="form-control" required><a>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label" >Unit Price</label>
+                                    <input type="number" name="unit_price" class="form-control" required><a>
+                                </div>
+                            
+                                <button type="submit" class="btn btn-primary mb-3">Add Item</button>
+                            </form>
+
+                            <h3 class="mb-3">Items</h3>
+                            <div class="table-responsive mb-4">
+                                <table class="table table-bordered mb-3">
+                                    <tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>Action</th></tr>
+                                    {% for item in items %}
+                                    <tr>
+                                        <td>{{ item.description }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ item.unit_price }}</td>
+                                        <td>{{ item.total }}</td>
+                                         <td>
+                                            <a href="{% url 'managementSystem:delete_proforma_item' item.id %}" 
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Are you sure you want to remove this item?')">
+                                            Remove
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <h3 class="text-end mb-3"><strong>Total:</strong> {{ invoice.total_amount }}</h3>
+
+                            <a href="{% url 'managementSystem:view_proforma_invoice' invoice.id %}"  class="btn btn-primary">View Invoice</a>
+                       </div>
+                  </div>
+               </div>
+            </div>
+        </div>
+    </div>  
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" type=""></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="{% static 'js/jquery.slimscroll.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Select2 JS -->
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Datetimepicker JS -->
+    <script src="{% static 'js/moment.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+    <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/script.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="ac3f8615a263811875ad4144-|49" defer=""></script>
+
+{% endblock %}

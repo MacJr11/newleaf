@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="main-wrapper">
+       <div class="page-wrapper">
+            <div class="content content-two create-project">
+                <div class="container mt-4">
+                    <div class="card shadow-none">
+                       <div class="card-body">
+                            <h2>Create Proforma Invoice</h2>
+                            <form method="post"> 
+                                {% csrf_token %}                           
+                                <div class="mb-3">
+                                    <label class="form-label">Client Name:</label>
+                                    <input type="text" name="client_name" class="form-control" required>
+                                </div>
+                            
+                                <button type="submit" class="btn btn-primary">Generate Invoice</button>
+                            </form>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" type=""></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="{% static 'js/jquery.slimscroll.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Select2 JS -->
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Datetimepicker JS -->
+    <script src="{% static 'js/moment.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+    <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/script.js' %}" type="ac3f8615a263811875ad4144-text/javascript"></script>
+
+    <script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="ac3f8615a263811875ad4144-|49" defer=""></script>
+
+{% endblock %}

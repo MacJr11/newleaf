@@ -74,3 +74,6 @@ def dashboard_view(request):
         "top_workers": top_workers,
         "top_clients": top_clients,
     })
+
+def home(request):
+    return render(request, 'home.html')

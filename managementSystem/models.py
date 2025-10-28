@@ -128,4 +128,35 @@ class Notification(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.title}"
-    
+
+
+
+class ProformaInvoice(models.Model):
+    po_number = models.CharField(max_length=50, unique=True, blank=True)
+    client_name = models.CharField(max_length=255, blank=True)
+    date = models.DateField(auto_now_add=True, blank=True, null=True)
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+
+    def save(self, *args, **kwargs):
+        if not self.po_number:
+            # Generate unique number like PF-20251004-001
+            today = timezone.now().strftime("%Y%m%d")
+            last = ProformaInvoice.objects.filter(po_number__startswith=f"PF-{today}").count() + 1
+            self.po_number = f"PF-{today}-{last:03d}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Proforma Invoice {self.po_number}"
+
+class ProformaItem(models.Model):
+    invoice = models.ForeignKey(ProformaInvoice, on_delete=models.CASCADE, related_name="items")
+    description = models.CharField(max_length=255, null=True, blank=True)
+    quantity = models.PositiveIntegerField(default=1)
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2)
+
+    @property
+    def total(self):
+        return self.quantity * self.unit_price
+
+    def __str__(self):
+        return f"{self.description} - {self.invoice.po_number}"

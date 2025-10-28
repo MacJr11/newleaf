@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="main-wrapper">
+        <div class="page-wrapper">
+            <div class="content content-two">
+
+                <!-- Breadcrumb -->
+                <div class="mb-4 d-flex align-items-center flex-wrap gap-2 justify-content-between">
+                    <div>
+                        <h4 class="mb-1 fw-bold">Clients</h4>
+                        <nav>
+                            <ol class="breadcrumb breadcrumb-dot mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="{% url 'dashboard:dashboard'%}">Home</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Proforma Invoice</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class=" d-flex align-items-center">
+                        <a href="{% url 'managementSystem:create_proforma_invoice' %}" class="btn btn-md btn-primary me-2"><i class="ti ti-plus me-1"></i>Create New</a>
+                    </div>
+                </div>
+                <!-- /Breadcrumb -->
+
+                <!-- Search -->
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 table-header mb-3">
+                    
+                </div>
+                <!-- /Search -->
+
+                <!-- Table List -->
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-light text-uppercase">
+                            <tr>
+                                <th class="no-sort">PO Number</th>
+                                <th class="no-sort">Customer</th>
+                                <th class="no-sort">Date</th>
+                                <th class="no-sort">Total Amount</th>
+                                <th class="no-sort">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for invoice in invoices %}
+                            <tr>
+                                <td> {{ invoice.po_number }} </td>
+                                <td> {{ invoice.client_name }} </td>
+                                <td> {{ invoice.date|date:"M d, Y" }} </td>
+                                <td> ₵{{ invoice.total_amount|floatformat:2 }} </td>
+                                <td>
+                                    <a href="{% url 'managementSystem:view_proforma_invoice' invoice.id %}" class="btn btn-sm btn-info">View</a>
+                                    <a href="{% url 'managementSystem:edit_proforma_invoice' invoice.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{% url 'managementSystem:delete_proforma_invoice' invoice.id %}" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Are you sure you want to remove this invoice?')">Delete</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No Proforma Invoices found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>                    
+                </div>
+                <!-- /Table List -->
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery -->
+    <script data-cfasync="false" src="{% static 'cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min-2.js' %}"></script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" type=""></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="{% static 'js/jquery.slimscroll.min.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+
+    <!-- Datatable JS -->
+    <script src="{% static 'js/jquery.dataTables.min.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+    <script src="{% static 'js/dataTables.bootstrap5.min.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+
+    <!-- Select2 JS -->
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+
+    <!-- Daterangepikcer JS -->
+    <script src="{% static 'js/moment.min.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+    <script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+
+    <!-- Mobile Input -->
+    <script src="{% static 'plugins/intltelinput/js/intlTelInput.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/script.js' %}" type="3ef0ac283bd62b58e08a32f8-text/javascript"></script>
+
+<script src="{% static 'cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min-2.js' %}" data-cf-settings="3ef0ac283bd62b58e08a32f8-|49" defer=""></script>
+
+
+{% endblock %}

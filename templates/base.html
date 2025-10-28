@@ -51,10 +51,10 @@
                 <div class="main-header">
 
                     <div class="header-left">
-                        <a href="{% url 'dashboard:dashboard' %}" class="logo" style="width: 100px;">
+                        <a href="{% url 'dashboard:home' %}" class="logo" style="width: 100px;">
                             <img src=" {% static 'img/nlogo.png' %} " alt="Logo">
                         </a>
-                        <a href="{% url 'dashboard:dashboard' %}" class="dark-logo">
+                        <a href="{% url 'dashboard:home' %}" class="dark-logo">
                             <img src=" {% static 'img/nlogo.png' %} " alt="Logo">
                         </a>
                     </div>
@@ -168,7 +168,7 @@
                                                 <p class="fs-13 text-light">Manager</p>
                                             </div>
                                         </div>
-                                        <a class="dropdown-item logout d-flex align-items-center" href="{% url 'logout' %}">
+                                        <a class="dropdown-item logout d-flex align-items-center" href="{% url 'users:logout' %}">
                                             <i class="ti ti-logout me-2"></i>Signout
                                         </a>
                                     </div>
@@ -186,7 +186,7 @@
                         </a>
                         <div class="dropdown-menu p-2 mt-0">
                             <i class="ti ti-user me-2"></i>{{ request.user.username }}
-                            <a class="dropdown-item logout d-flex align-items-center" href="{% url 'logout' %}">
+                            <a class="dropdown-item logout d-flex align-items-center" href="{% url 'users:logout' %}">
                                 <i class="ti ti-logout me-2"></i>Signout
                             </a>
                         </div>
@@ -229,13 +229,13 @@
             <div class="sidebar" id="sidebar">
                 <!-- Logo -->
                 <div class="sidebar-logo">
-                    <a href="{% url 'dashboard:dashboard' %}" class="logo logo-normal" style="width:110px; margin-top: -10px;">
+                    <a href="{% url 'dashboard:home' %}" class="logo logo-normal" style="width:110px; margin-top: -10px;">
                         <img src=" {% static 'img/nlogo.png' %}" alt="Logo">
                     </a>
-                    <a href="{% url 'dashboard:dashboard' %}" class="logo logo-small">
+                    <a href="{% url 'dashboard:home' %}" class="logo logo-small">
                         <img src="{% static 'img/nlogo.png' %}" alt="Logo">
                     </a>
-                    <a href="{% url 'dashboard:dashboard' %}" class="dark-logo">
+                    <a href="{% url 'dashboard:home' %}" class="dark-logo">
                         <img src="{% static 'img/nlogo.png' %}" alt="Logo">
                     </a>
                 </div>
@@ -251,20 +251,9 @@
                         </div>
                     </div>
                     <div class="me-auto d-flex align-items-center mb-3">
-                        <div class="dropdown add-dropdown me-2">
-                            <a href="#" class="btn btn-md border d-inline-flex align-items-center fs-12 px-2" data-bs-toggle="dropdown">
-                                <i class="ti ti-plus me-1 text-gray-5"></i>Add New
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-start p-2" stytle="z-index: 10;">
-                                <li><a class="dropdown-item d-flex align-items-center" href="employees.html"><i class="ti ti-user me-2"></i>Employee</a></li>
-                                <li><a class="dropdown-item d-flex align-items-center" href="teams.html"><i class="ti ti-users-plus me-2"></i>Team</a></li>
-                                <li><a class="dropdown-item d-flex align-items-center" href="projects.html"><i class="ti ti-progress-check me-2"></i>Projects</a></li>
-                                <li><a class="dropdown-item d-flex align-items-center" href="users.html"><i class="ti ti-users me-2"></i>Users</a></li>
-                                <li><a class="dropdown-item d-flex align-items-center" href="manual-time.html"><i class="ti ti-clock me-2"></i>Manual Time</a></li>
-                            </ul>
-                        </div>
+                        
                         <span class="btn btn-md btn-time px-2 d-inline-flex align-items-center fs-12 bg-primary-100 text-primary">
-                            <i class="ti ti-clock me-1"></i><a href="{% url 'logout' %}">Logout</a>
+                            <i class="ti ti-clock me-1"></i><a href="{% url 'users:logout' %}">Logout</a>
                         </span>
                     </div>                    
                 </div>
@@ -292,6 +281,11 @@
                                     <li>
                                         <a href="{% url 'managementSystem:orders' %}" target="_self">
                                             <i class="ti ti-layout"></i><span>Purchase Order</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'managementSystem:list_proforma_invoices' %}" target="_self">
+                                            <i class="ti ti-list"></i><span>Proforma Invoice</span>
                                         </a>
                                     </li>
                                 </ul>
